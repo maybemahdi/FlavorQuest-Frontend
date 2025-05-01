@@ -8,11 +8,15 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        poppins: ["Poppins", "sans-serif"],
+      },
       colors: {
-        "blue-primary": "#102C54",
-        "green-primary": "#1BB68A",
-        "green-light": "#E8F8F3",
-        "gray-light": "#4B5563",
+        "text-primary": "#111111",
+        "text-secondary": "#5B5454",
+        title: "#3B3333",
+        primary: "#dd6c3b",
+        "dashboard-primary": "#212121",
       },
       container: {
         screens: {
@@ -22,10 +26,10 @@ export default {
         padding: "1.2rem",
       },
       screens: {
-        xs: "540px", 
+        xs: "540px",
       },
     },
   },
-  
+
   plugins: [],
 } satisfies Config;
