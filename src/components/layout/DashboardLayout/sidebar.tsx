@@ -45,7 +45,7 @@ function Nav() {
   return (
     <div className="space-y-1 px-3">
       <NavItem
-        href="/"
+        href="/dashboard/...."
         icon={<Home size={20} />}
         label="Home"
         isActive={pathname === "/"}

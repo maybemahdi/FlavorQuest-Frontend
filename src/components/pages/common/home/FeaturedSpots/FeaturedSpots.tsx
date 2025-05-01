@@ -13,9 +13,9 @@ export default function FeaturedSpots() {
     console.log(id);
   };
   return (
-    <section className="py-8 md:py-16 bg-slate-100/90">
+    <section className="py-12 md:py-16 bg-slate-100/90">
       <MyContainer>
-        <div className="flex justify-between items-center mb-10">
+        <div className="flex justify-between items-center mb-6 md:mb-10">
           <SectionHead title="Featured Street Eats" />
           <Link href={"/feed"} className="hidden md:block">
             <MyButton label="View all" isArrow className="rounded-full" />

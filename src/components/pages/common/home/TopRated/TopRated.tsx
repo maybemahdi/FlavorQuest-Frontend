@@ -34,7 +34,7 @@ export default function TopRated() {
       <MyContainer>
         <div className="flex justify-between items-center mb-8">
           <SectionHead title="Top Rated This Week" />
-          <button className="flex items-center text-primary font-medium">
+          <button className="hidden md:flex items-center text-primary font-medium">
             View all <ChevronRight className="ml-1 w-5 h-5" />
           </button>
         </div>

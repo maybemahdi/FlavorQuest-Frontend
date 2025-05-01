@@ -275,14 +275,14 @@ const NavBar = () => {
           ) : (
             <div className="lg:hidden flex flex-col gap-3 mt-5">
               <MyButton
-                onClick={() => router.push("/register")}
+                onClick={() => router.push("/auth/register")}
                 label="Sign up"
                 variant="outline"
                 fullWidth
                 className="rounded-full"
               />
               <MyButton
-                onClick={() => router.push("/login")}
+                onClick={() => router.push("/auth/login")}
                 label="Sign in"
                 variant="filled"
                 fullWidth

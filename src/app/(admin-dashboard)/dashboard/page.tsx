@@ -1,11 +1,12 @@
-import React from 'react';
+import DashboardHomePage from "@/components/pages/admin-dashboard/DashboardHome/DashboardHome";
+import React from "react";
 
-const page = () => {
-    return (
-        <div>
-            dashboard
-        </div>
-    );
+const DashboardHome = () => {
+  return (
+    <div>
+      <DashboardHomePage />
+    </div>
+  );
 };
 
-export default page;
+export default DashboardHome;

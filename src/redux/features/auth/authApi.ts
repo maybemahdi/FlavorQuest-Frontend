@@ -5,7 +5,7 @@ const authApi = baseApi.injectEndpoints({
     login: builder.mutation({
       query: (userInfo) => {
         return {
-          url: "login",
+          url: "/auth/login",
           method: "POST",
           body: userInfo,
         };
@@ -27,7 +27,7 @@ const authApi = baseApi.injectEndpoints({
       query: (userInfo) => {
         console.log({ userInfo });
         return {
-          url: "forgot-password",
+          url: "/auth/forgot-password",
           method: "POST",
           body: userInfo,
         };
@@ -35,12 +35,14 @@ const authApi = baseApi.injectEndpoints({
       invalidatesTags: ["user"],
     }),
     resetPassword: builder.mutation({
-      query: (userInfo) => {
-        console.log({ userInfo });
+      query: ({ data, token }) => {
         return {
-          url: "reset-password",
+          url: "/auth/reset-password",
           method: "POST",
-          body: userInfo,
+          body: data,
+          headers: {
+            Authorization: `${token}`,
+          },
         };
       },
       invalidatesTags: ["user"],
@@ -58,7 +60,7 @@ const authApi = baseApi.injectEndpoints({
     register: builder.mutation({
       query: (userInfo) => {
         return {
-          url: "register",
+          url: "/users/register",
           method: "POST",
           body: userInfo,
         };
