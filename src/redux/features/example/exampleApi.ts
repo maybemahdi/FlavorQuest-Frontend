@@ -11,6 +11,7 @@ const exampleApi = baseApi.injectEndpoints({
             params.append(item.name, item.value as string);
           });
         }
+        // 
         return {
           url: `example`,
           method: "GET",
