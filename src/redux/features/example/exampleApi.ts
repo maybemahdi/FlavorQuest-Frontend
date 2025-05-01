@@ -20,6 +20,8 @@ const exampleApi = baseApi.injectEndpoints({
       },
       providesTags: ["example"],
     }),
+
+    // 
     getSingleExample: builder.query({
       query: (id) => ({
         url: `example/${id}`,
