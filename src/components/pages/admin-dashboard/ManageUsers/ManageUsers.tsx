@@ -1,19 +1,12 @@
 "use client";
-import {
-  Table,
-  Tag,
-  Pagination,
-  Tooltip,
-  Popconfirm,
-  message,
-} from "antd";
+import { Table, Tag, Pagination, Tooltip, Popconfirm, message } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
-import { useGetAllUserQuery, useDeleteUserMutation } from "@/redux/features/admin/admin.api";
-import { useState } from "react";
 import {
-  StopOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+  useGetAllUserQuery,
+  useDeleteUserMutation,
+} from "@/redux/features/admin/admin.api";
+import { useState } from "react";
+import { StopOutlined, DeleteOutlined } from "@ant-design/icons";
 import Image from "next/image";
 
 type TUser = {
@@ -40,8 +33,8 @@ const ManageUsers = () => {
     try {
       await deleteUser(userId).unwrap();
       message.success("User deleted successfully!");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-    } catch (error:any) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    } catch (error: any) {
       message.error("Failed to delete user!");
     }
   };
@@ -94,18 +87,21 @@ const ManageUsers = () => {
         return (
           <div className="flex gap-4">
             <Tooltip title="Block User">
-              <StopOutlined
-                className={`text-xl ${
-                  isDisabled
-                    ? "text-gray-400 cursor-not-allowed"
-                    : "text-orange-500 hover:text-orange-600 cursor-pointer"
-                }`}
-                onClick={() => {
-                  if (!isDisabled) {
-                    console.log("Block user:", record.id);
-                  }
-                }}
-              />
+              <Popconfirm
+                title="Are you sure to BLock this user?"
+                onConfirm={() => handleDelete(record.id)}
+                okText="Yes"
+                cancelText="No"
+                disabled={isDisabled}
+              >
+                <StopOutlined
+                  className={`text-xl ${
+                    isDisabled
+                      ? "text-gray-400 cursor-not-allowed"
+                      : "text-orange-500 hover:text-orange-600 cursor-pointer"
+                  }`}
+                />
+              </Popconfirm>
             </Tooltip>
 
             <Tooltip title="Delete User">
