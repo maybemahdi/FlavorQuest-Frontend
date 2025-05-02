@@ -54,10 +54,13 @@ const ManagePost = () => {
   const [selectedPost, setSelectedPost] = useState<TPost | null>(null);
   const [updated] = useUpdatePostsMutation()
 
+  const [searchTerm, setSearchTerm] = useState("");
+
  
   const { data: postsData, isFetching } = useGetAllPostsQuery({
     page: pagination.current,
     limit: pagination.pageSize,
+    searchTerm
   });
 
   
@@ -195,6 +198,16 @@ const ManagePost = () => {
 
   return (
     <div className="px-5 mt-6">
+      <MyFormWrapper
+      className="mb-10"
+      onSubmit={() => {}}>
+  <MyFormInput
+    name="searchTerm"
+    placeHolder="search the name using title"
+    onValueChange={(val) => setSearchTerm(val)}
+  />
+</MyFormWrapper>
+
       <div className="overflow-x-auto">
         <Table
           columns={columns}
