@@ -21,7 +21,7 @@ import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
 import MyButton from "@/components/ui/MyButton/MyButton";
 import { toast } from "sonner";
 import { z } from "zod";
-import { useGetAllPostsQuery } from "@/redux/features/admin/admin.api";
+import { useGetAllPostsQuery, useUpdatePostsMutation } from "@/redux/features/admin/admin.api";
 
 type TPost = {
   id: string;
@@ -52,6 +52,7 @@ const ManagePost = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionStatus, setActionStatus] = useState<"APPROVED" | "REJECTED" | null>(null);
   const [selectedPost, setSelectedPost] = useState<TPost | null>(null);
+  const [updated] = useUpdatePostsMutation()
 
  
   const { data: postsData, isFetching } = useGetAllPostsQuery({
@@ -67,17 +68,26 @@ const ManagePost = () => {
     setIsModalOpen(true);
   };
 
-  const handleFormSubmit = (data: { adminComment: string }, reset: () => void) => {
+  const handleFormSubmit = async(data: { adminComment: string }, reset: () => void) => {
     if (selectedPost) {
       const result = {
-        id: selectedPost.id,
         status: actionStatus,
         adminComment: data.adminComment,
       };
 
-      console.log(result);
+      try{
+       const result1 = await updated({
+           data:result,
+           order_id:selectedPost.id
+     }).unwrap()
+ 
+     console.log(result1)
 
-      toast.success("Post updated successfully!");
+        toast.success("Post updated successfully!");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+      }catch(error:any){
+        toast.error("Post not updated!");
+      }
       setIsModalOpen(false);
       reset();
     }
@@ -119,36 +129,59 @@ const ManagePost = () => {
       dataIndex: "user",
       render: (user) => (
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <Image
-            src={user.profilePhoto}
-            alt="User"
-            width={40}
-            height={40}
-            className="w-10 h-10 rounded-full"
-          />
+          {user.profilePhoto ? (
+            <Image
+              src={user.profilePhoto}
+              alt="User"
+              width={40}
+              height={40}
+              className="w-10 h-10 rounded-full"
+            />
+          ) : (
+            <Image
+              src="https://i.postimg.cc/nLRNMYzn/02.jpg" 
+              alt="Default User"
+              width={40}
+              height={40}
+              className="w-10 h-10 rounded-full"
+            />
+          )}
           {user.name}
         </div>
       ),
     },
+    
     {
       title: "Actions",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      render: (_: any, record: TPost) => (
-        <div className="flex gap-4">
-          <CheckCircleOutlined
-            onClick={() => handleOpenModal("APPROVED", record)}
-            className={`text-xl cursor-pointer ${record.status === "APPROVED" ? "text-gray-400 cursor-not-allowed" : "text-green-600 hover:text-green-800"}`}
-            style={{
-              pointerEvents: record.status === "APPROVED" ? "none" : "auto",
-            }}
-          />
-          <CloseCircleOutlined
-            onClick={() => handleOpenModal("REJECTED", record)}
-            className="text-xl text-red-500 hover:text-red-700 cursor-pointer"
-          />
-        </div>
-      ),
-    },
+      render: (_: any, record: TPost) => {
+        const isPending = record.status === "PENDING";
+    
+        return (
+          <div className="flex gap-4">
+            <CheckCircleOutlined
+              onClick={() => isPending && handleOpenModal("APPROVED", record)}
+              className={`text-xl cursor-pointer ${
+                isPending ? "text-green-600 hover:text-green-800" : "text-gray-400 cursor-not-allowed"
+              }`}
+              style={{
+                pointerEvents: isPending ? "auto" : "none",
+              }}
+            />
+            <CloseCircleOutlined
+              onClick={() => isPending && handleOpenModal("REJECTED", record)}
+              className={`text-xl cursor-pointer ${
+                isPending ? "text-red-500 hover:text-red-700" : "text-gray-400 cursor-not-allowed"
+              }`}
+              style={{
+                pointerEvents: isPending ? "auto" : "none",
+              }}
+            />
+          </div>
+        );
+      },
+    }
+    
   ];
 
   const onChange: TableProps<TPost>["onChange"] = (paginationConfig, _filters, _sorter, extra) => {

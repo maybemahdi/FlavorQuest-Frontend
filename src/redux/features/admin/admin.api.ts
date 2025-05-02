@@ -13,9 +13,6 @@ const adminApi = baseApi.injectEndpoints({
             queryParams.append(key, value as string);
           });
         }
-
-        console.log(queryParams.toString()); 
-
         return {
           url: "/post",
           method: "GET",
@@ -30,7 +27,29 @@ const adminApi = baseApi.injectEndpoints({
       },
       providesTags: ["admin"], 
     }),
+    updatePosts: builder.mutation({
+      query: ({ data, order_id }) => {
+        console.log(data,order_id)
+        return {
+          url: `/post/update/${order_id}`,
+          method: "PATCH",
+          body: data,
+        };
+      
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      transformResponse: (response:any) => {
+        return {
+          data: response.data,
+        };
+      },
+      invalidatesTags: ["admin"],
+    }),
   }),
 });
 
-export const { useGetAllPostsQuery } = adminApi;
+export const { 
+  useGetAllPostsQuery,
+  useUpdatePostsMutation
+
+} = adminApi;
