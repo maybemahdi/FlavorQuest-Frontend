@@ -7,10 +7,14 @@ import TopBar from "./top-bar";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
+  role: "user" | "admin";
 }
 
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false)
+export default function DashboardLayout({
+  children,
+  role,
+}: DashboardLayoutProps) {
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
   // Handle drawer toggle
   const toggleMobileDrawer = () => {
@@ -23,21 +27,19 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <div
         className={`hidden lg:block transition-all duration-300 ease-in-out`}
       >
-        <Sidebar
-        />
+        <Sidebar role={role as string} />
       </div>
 
       {/* Mobile Drawer - visible when open on small screens */}
       <MobileDrawer
+        role={role as string}
         isOpen={isMobileDrawerOpen}
         onClose={() => setIsMobileDrawerOpen(false)}
       />
 
       {/* Main content area */}
       <div className="flex flex-col flex-1 overflow-hidden">
-        <TopBar
-          onMenuClickAction={toggleMobileDrawer}
-        />
+        <TopBar onMenuClickAction={toggleMobileDrawer} />
 
         <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
       </div>

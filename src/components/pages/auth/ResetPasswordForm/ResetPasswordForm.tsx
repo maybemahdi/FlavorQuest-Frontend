@@ -9,7 +9,7 @@ import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
 import { verifyToken } from "@/utils/verifyToken";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -27,9 +27,11 @@ const ResetPasswordForm = () => {
   const userId = searchParams.get("userId");
   const verifiedToken = token ? verifyToken(token as string) : null;
 
-  if (!token || !verifiedToken || userId) {
-    router.replace("/auth/login");
-  }
+  useEffect(() => {
+    if (!token || !verifiedToken || !userId) {
+      router.replace("/auth/login");
+    }
+  }, [token, verifiedToken, userId, router]);
 
   const handleSubmit = async (data: any, reset: any) => {
     const resetPasswordData = {
@@ -43,7 +45,7 @@ const ResetPasswordForm = () => {
         "Resetting password..."
       );
       if (response?.data?.success) {
-        router.push("/");
+        router.push("/auth/login");
         reset();
       }
     } catch (error) {

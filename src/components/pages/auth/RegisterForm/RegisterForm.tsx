@@ -82,10 +82,11 @@ const RegisterForm = () => {
 
           if (response?.data?.success) {
             const user = verifyToken(response?.data?.data?.accessToken);
+            console.log(user)
             dispatch(
               setUser({
                 user: user,
-                token: response?.data?.data?.accessToken,
+                access_token: response?.data?.data?.accessToken,
               })
             );
             toast.success(result?.data?.message);

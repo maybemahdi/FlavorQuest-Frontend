@@ -12,6 +12,15 @@ const authApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["user"],
     }),
+    logoutUser: builder.mutation({
+      query: () => {
+        return {
+          url: "/auth/logout",
+          method: "POST",
+        };
+      },
+      invalidatesTags: ["user"],
+    }),
     loginWithGoogle: builder.mutation({
       query: (userInfo) => {
         console.log({ userInfo });
@@ -77,7 +86,7 @@ const authApi = baseApi.injectEndpoints({
     }),
     getMe: builder.query({
       query: () => ({
-        url: "user/me",
+        url: "/users/my-profile",
         method: "GET",
       }),
       providesTags: ["user"],
@@ -87,6 +96,7 @@ const authApi = baseApi.injectEndpoints({
 
 export const {
   useLoginMutation,
+  useLogoutUserMutation,
   useLoginWithGoogleMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
