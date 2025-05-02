@@ -78,8 +78,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
           if (result.isConfirmed) {
             api.dispatch(logout());
             signOut();
-          }
-          else if (result.isDismissed) {
+          } else if (result.isDismissed) {
             api.dispatch(logout());
             signOut();
           }
@@ -96,8 +95,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithRefreshToken,
-  tagTypes: [
-    "user", "example", "payment"
-  ],
+  tagTypes: ["user", "example", "payment", "post", "category"],
   endpoints: () => ({}),
 });

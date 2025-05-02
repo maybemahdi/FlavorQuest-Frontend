@@ -48,3 +48,34 @@ body {
 .slim-scroll::-webkit-scrollbar-thumb:hover {
   background: #555; /* Thumb color on hover */
 }
+
+
+/* antd pagination for table  */
+
+/* Change the color of the pagination items */
+.custom-pagination .ant-pagination-item {
+  color: #dd6c3b; /* Default item color */
+}
+
+/* Change color of previous and next buttons */
+.custom-pagination .ant-pagination-prev,
+.custom-pagination .ant-pagination-next {
+  color: #dd6c3b;
+}
+
+/* Light #1F6306 background when hovering */
+.custom-pagination .ant-pagination-item:hover {
+  background-color: #f0f0f0;
+}
+
+/* Custom #1F6306 active item */
+.custom-pagination .ant-pagination-item-active {
+  background-color: #dd6c3b !important; /* Custom #1F6306 background */
+  border-color: #dd6c3b !important;
+  color: white !important; /* Apply white text color to active item */
+}
+
+/* Optional: For the active item when it's selected */
+.custom-pagination .ant-pagination-item-active a {
+  color: white !important; /* Ensure the text inside the anchor tag is white */
+}

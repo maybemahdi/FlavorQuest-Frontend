@@ -79,7 +79,7 @@ const MyFormSelect = ({
             />
 
             {/* Error Message */}
-            {error && <small style={{ color: "red" }}>{error.message}</small>}
+            {error && <small className="!font-poppins text-[13px]" style={{ color: "red" }}>{error.message}</small>}
           </Form.Item>
         </div>
       )}

@@ -18,10 +18,12 @@ export function FoodSpotCard({
   spot,
   onFavoriteToggle,
   showAdminInfo = false,
+  className,
 }: {
   spot: IFoodSpot;
   onFavoriteToggle: (id: string) => void;
   showAdminInfo?: boolean;
+  className?: string;
 }) {
   const {
     id,
@@ -41,7 +43,6 @@ export function FoodSpotCard({
     votesCount,
     averageRating,
     isFavorite = false,
-    className,
   } = spot;
 
   const isApproved = status === "APPROVED";
@@ -67,7 +68,7 @@ export function FoodSpotCard({
         {/* Image Section */}
         <div className="relative aspect-square w-full overflow-hidden">
           <Image
-            src={image}
+            src={image || "/placeholder.png"}
             alt={title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -145,7 +146,7 @@ export function FoodSpotCard({
               {priceRange}
             </span>
             <span className="text-xs px-2 py-1 bg-gray-100 rounded-full">
-              {category.name}
+              {category?.name}
             </span>
           </div>
 
@@ -154,7 +155,7 @@ export function FoodSpotCard({
             {user.avatar ? (
               <div className="relative w-6 h-6 rounded-full overflow-hidden mr-2">
                 <Image
-                  src={user.avatar}
+                  src={user?.avatar}
                   alt={user.name}
                   fill
                   className="object-cover"

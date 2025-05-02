@@ -83,9 +83,9 @@ export default function TopBar({ onMenuClickAction }: TopBarProps) {
       <div ref={dropdownRef} className="relative">
         <button
           onClick={() => setProfileOpen(!profileOpen)}
-          className="flex items-center text-sm rounded-full focus:outline-none dark:hover:text-gray-300"
+          className="flex items-center text-sm rounded-full focus:outline-none"
         >
-          <RxAvatar size={35} />
+          <RxAvatar size={30} />
         </button>
 
         {profileOpen && (

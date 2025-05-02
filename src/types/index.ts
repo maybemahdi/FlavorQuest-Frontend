@@ -6,6 +6,8 @@ export interface IFoodSpot {
   minPrice: number;
   maxPrice: number;
   image: string;
+  categoryId: string;
+  userId: string;
   category: {
     id: string;
     name: string;

@@ -1,53 +1,93 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // app/spots/page.tsx
 "use client";
 
 import { FoodSpotCard } from "@/components/shared/FoodSpotCard/FoodSpotCard";
+import FoodSpotCardSkeleton from "@/components/shared/FoodSpotCardSkeleton/FoodSpotCardSkeleton";
+import Loading from "@/components/shared/Loading/Loading";
 import MyContainer from "@/components/shared/MyContainer/MyContainer";
 import { foodSpots } from "@/data/foodSpots";
-import { Empty } from "antd";
+import { useGetAllCategoryQuery } from "@/redux/features/category/category.api";
+import { useGetAllPostQuery } from "@/redux/features/posts/posts.user.api";
+import { IFoodSpot } from "@/types";
+import { Empty, Pagination } from "antd";
 import { ChevronDown, Search } from "lucide-react";
-import { useState } from "react";
-
-// Mock data matching your Prisma model
-const spots = foodSpots;
-
-const categories = [
-  { id: "1", name: "Mexican" },
-  { id: "2", name: "Asian" },
-  { id: "3", name: "Snacks" },
-  { id: "4", name: "Meals" },
-];
+import { useEffect, useState } from "react";
 
 const SpotsPage = () => {
+  // State management
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(2);
   const [searchQuery, setSearchQuery] = useState("");
-  const [priceRange, setPriceRange] = useState([0, 50]);
+  const [priceRange, setPriceRange] = useState([0, 1000]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [sortBy, setSortBy] = useState("popular");
+  const [sortBy, setSortBy] = useState("");
+  const [objectQuery, setObjectQuery] = useState<
+    { name: string; value: string | number }[]
+  >([]);
 
-  // Filter logic
-  const filteredSpots = spots.filter((spot) => {
-    const matchesSearch =
-      spot.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      spot.category.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory
-      ? spot.category.id === selectedCategory
-      : true;
-    const matchesPrice =
-      spot.minPrice >= priceRange[0] && spot.maxPrice <= priceRange[1];
+  // Initialize query
+  useEffect(() => {
+    setObjectQuery([
+      { name: "page", value: page },
+      { name: "limit", value: pageSize },
+    ]);
+  }, []);
 
-    return matchesSearch && matchesCategory && matchesPrice;
+  // Handle pagination changes
+  const handlePaginationChange = (page: number, pageSize: number) => {
+    setPage(page);
+    setPageSize(pageSize);
+  };
+
+  // Update query when search/filter parameters change
+  useEffect(() => {
+    const newQuery: { name: string; value: string | number }[] = [
+      { name: "page", value: page },
+      { name: "limit", value: pageSize },
+    ];
+
+    if (searchQuery) {
+      newQuery.push({ name: "searchTerm", value: searchQuery });
+    }
+
+    if (selectedCategory) {
+      newQuery.push({ name: "category", value: selectedCategory });
+    }
+
+    if (priceRange[0] !== 0 || priceRange[1] !== 1000) {
+      newQuery.push(
+        { name: "minPrice", value: priceRange[0] },
+        { name: "maxPrice", value: priceRange[1] }
+      );
+    }
+
+    if (sortBy !== "") {
+      newQuery.push({ name: "sortBy", value: sortBy });
+    }
+
+    setObjectQuery(newQuery);
+  }, [page, pageSize, searchQuery, priceRange, selectedCategory, sortBy]);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setPage(1);
+  }, [searchQuery, priceRange, selectedCategory, sortBy]);
+
+  // API call
+  const { data, isLoading, isFetching } = useGetAllPostQuery(objectQuery, {
+    refetchOnMountOrArgChange: true,
   });
-
-  // Sort logic
-  const sortedSpots = [...filteredSpots].sort((a, b) => {
-    if (sortBy === "popular") return b.votesCount - a.votesCount;
-    if (sortBy === "rating") return b.averageRating - a.averageRating;
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
+  const { data: categoriesResponse, isLoading: isCategoryLoading } =
+    useGetAllCategoryQuery(undefined);
 
   const onFavoriteToggle = async (id: string) => {
     console.log(id);
   };
+
+  if (isCategoryLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 md:py-12">
@@ -89,11 +129,13 @@ const SpotsPage = () => {
                 onChange={(e) => setSelectedCategory(e.target.value)}
               >
                 <option value="">All Categories</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
+                {categoriesResponse?.data?.map(
+                  (category: { name: string; id: string }) => (
+                    <option key={category.id} value={category.name}>
+                      {category.name}
+                    </option>
+                  )
+                )}
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-primary">
                 <ChevronDown className="h-4 w-4" />
@@ -107,6 +149,7 @@ const SpotsPage = () => {
                 onChange={(e) => setSortBy(e.target.value)}
                 className="appearance-none border border-primary focus:outline-primary bg-transparent text-primary rounded-lg p-2 pr-8 cursor-pointer w-full"
               >
+                <option value="">Sort By</option>
                 <option value="popular">Most Popular</option>
                 <option value="rating">Top Rated</option>
                 <option value="newest">Newest</option>
@@ -126,7 +169,7 @@ const SpotsPage = () => {
               <input
                 type="range"
                 min="0"
-                max="50"
+                max="499"
                 step="1"
                 value={priceRange[0]}
                 onChange={(e) =>
@@ -136,8 +179,8 @@ const SpotsPage = () => {
               />
               <input
                 type="range"
-                min="0"
-                max="50"
+                min="500"
+                max="1000"
                 step="1"
                 value={priceRange[1]}
                 onChange={(e) =>
@@ -152,9 +195,9 @@ const SpotsPage = () => {
 
       {/* Spots Grid */}
       <MyContainer className="py-8 md:py-12">
-        {sortedSpots.length > 0 ? (
+        {!isLoading && !isFetching && data?.data?.data?.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {sortedSpots.map((spot) => (
+            {data?.data?.data?.map((spot: IFoodSpot) => (
               <FoodSpotCard
                 key={spot?.id}
                 spot={spot}
@@ -163,6 +206,20 @@ const SpotsPage = () => {
             ))}
           </div>
         ) : (
+          ""
+        )}
+
+        {isLoading || isFetching ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {Array.from({ length: pageSize }).map((_, index) => (
+              <FoodSpotCardSkeleton key={index} />
+            ))}
+          </div>
+        ) : (
+          ""
+        )}
+
+        {!isLoading && !isFetching && data?.data?.data?.length < 1 ? (
           <div className="text-center py-12">
             <Empty description={false} />
             <h3 className="text-lg font-medium text-gray-900">
@@ -172,7 +229,20 @@ const SpotsPage = () => {
               Try adjusting your search or filters
             </p>
           </div>
+        ) : (
+          ""
         )}
+        <div className="p-4 w-full flex justify-center items-center mt-6">
+          <Pagination
+            current={page}
+            pageSize={pageSize}
+            total={data?.data?.meta?.total}
+            onChange={handlePaginationChange}
+            className="custom-pagination"
+            // showSizeChanger
+            // pageSizeOptions={[5, 10, 20, 50]}
+          />
+        </div>
       </MyContainer>
     </div>
   );

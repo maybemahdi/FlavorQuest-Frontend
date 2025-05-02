@@ -9,6 +9,8 @@ export const foodSpots: IFoodSpot[] = [
     location: "Downtown Square, 5th Avenue",
     minPrice: 3.5,
     maxPrice: 8.0,
+    userId: "string",
+    categoryId: "string",
     image:
       "https://images.unsplash.com/photo-1702568206165-3e81c138e256?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     category: {
@@ -38,6 +40,8 @@ export const foodSpots: IFoodSpot[] = [
     location: "Chinatown Night Market, Stall #12",
     minPrice: 5.0,
     maxPrice: 12.0,
+    userId: "string",
+    categoryId: "string",
     image:
       "https://images.unsplash.com/photo-1702568206165-3e81c138e256?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     category: {
@@ -67,6 +71,8 @@ export const foodSpots: IFoodSpot[] = [
     location: "Food Truck Park, West Side",
     minPrice: 6.5,
     maxPrice: 14.0,
+    userId: "string",
+    categoryId: "string",
     image:
       "https://images.unsplash.com/photo-1702568206165-3e81c138e256?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     category: {
