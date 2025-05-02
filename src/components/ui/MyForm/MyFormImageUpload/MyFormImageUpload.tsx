@@ -71,13 +71,13 @@ const MyFormImageUpload = ({
         render={({ fieldState: { error } }) => (
           <>
             {preview ? (
-              <div className={cn(" relative w-fit", previewImageClassName)}>
+              <div className={cn("w-[200px] h-[200px] relative", previewImageClassName)}>
                 <Image
                   height={300}
                   width={300}
                   src={preview}
                   alt="Preview"
-                  className="h-full w-full rounded-md object-fill"
+                  className="h-full w-full rounded-md object-cover"
                 />
                 <button
                   type="button"

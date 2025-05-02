@@ -1,15 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import LoginWithGoogle from "@/components/LoginWithGoogle";
-import MyFormCheckbox from "@/components/ui/MyForm/MyFormCheckbox/MyFormCheckbox";
+import MyButton from "@/components/ui/MyButton/MyButton";
 import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
 import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
+import { useLoginMutation } from "@/redux/features/auth/authApi";
+import { setUser } from "@/redux/features/auth/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
+import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
+import { verifyToken } from "@/utils/verifyToken";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { z } from "zod";
 
-const validationSchema = z.object({
+const loginSchema = z.object({
   email: z
     .string({
       required_error: "Email is required",
@@ -23,66 +30,66 @@ const validationSchema = z.object({
 });
 
 export default function LoginForm() {
-  const handleSubmit = async (formData: any, reset: any) => {
-    console.log(formData);
+  const dispatch = useAppDispatch();
+  const [loginUser] = useLoginMutation();
+  const router = useRouter();
+
+  const handleSubmit = async (data: any, reset: any) => {
+    const loginData = {
+      email: data.email,
+      password: data.password,
+    };
+
+    try {
+      const response = await handleAsyncWithToast(
+        async () =>
+          loginUser({
+            email: loginData.email,
+            password: loginData.password,
+          }),
+        "Logging in..."
+      );
+      if (response?.data?.success) {
+        const user = verifyToken(response?.data?.data?.accessToken);
+        dispatch(
+          setUser({
+            user: user,
+            token: response?.data?.data?.accessToken,
+          })
+        );
+        toast.success(response?.data?.message);
+        router.push("/");
+        reset();
+      }
+    } catch (error) {
+      // console.error("Error:", error);
+      toast.error("An unexpected error occurred");
+    }
   };
   return (
-    <div className="min-h-[calc(100vh-57px)] flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-lg space-y-8 p-6">
-        <div className="text-center space-y-2">
-          <h1 className="text-xl md:text-3xl font-bold tracking-tight text-navy-900">
-            Log in to your account
-          </h1>
-          <p className="text-gray-600">
-            Welcome back! Please enter your details.
-          </p>
-        </div>
+    <div className="min-h-[calc(100vh-100px)] flex items-center justify-center text-text-primary py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-lg">
+        <h2 className="text-center text-3xl text-primary font-bold">Sign in</h2>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-          <MyFormWrapper
-            onSubmit={handleSubmit}
-            resolver={zodResolver(validationSchema)}
-            className="flex flex-col gap-5 mb-5"
-          >
-            <div className="w-full">
-              <MyFormInput
-                name={"email"}
-                label="Email"
-                placeHolder="Enter your email"
-              />
-            </div>
-            <div className="w-full">
-              <MyFormInput
-                name={"password"}
-                label="Password"
-                placeHolder="Enter your Password"
-                type="password"
-              />
-            </div>
-            <div className="w-full flex items-center justify-between">
-              <MyFormCheckbox name="remember" label="Remember for 30 days" />
-              <p className="text-blue-500 cursor-pointer">Forgot password</p>
-            </div>
-            <button
-              className="px-4 py-2 bg-blue-primary text-white rounded-lg hover:bg-green-primary/90 transition-colors"
-              type="submit"
-              // onClick={() => setIsReply(false)}
-            >
-              Sign in
-            </button>
-          </MyFormWrapper>
-          <LoginWithGoogle />
-        </div>
+        <MyFormWrapper
+          resolver={zodResolver(loginSchema)}
+          onSubmit={handleSubmit}
+          className="space-y-4"
+        >
+          <MyFormInput type="email" placeHolder="Email" name="email" />
+          <MyFormInput type="password" placeHolder="Password" name="password" />
+          <Link href={"/auth/forget-password"}>
+            <p className="text-primary text-sm mt-2"> Forget Password?</p>
+          </Link>
+          <MyButton type="submit" label="Login" fullWidth />
+        </MyFormWrapper>
 
-        <p className="text-center text-sm text-gray-600">
-          Don&apos;t have an account?
-          <Link
-            href="/auth/register"
-            className="font-medium text-blue-600 hover:text-blue-500 ms-1"
-          >
+        <div className="flex justify-center mt-2 items-center gap-1">
+          New to FlavorQuest?
+          <Link href={"/auth/register"} className="text-primary font-medium">
             Sign up
           </Link>
-        </p>
+        </div>
       </div>
     </div>
   );
