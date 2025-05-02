@@ -79,6 +79,12 @@ function Nav({ role }: { role: string }) {
               isActive={pathname === "/dashboard/create-post"}
               isNested
             />
+            <NavItem
+              href="/dashboard/admin-approve"
+              label="Approve Post"
+              isActive={pathname === "/dashboard/admin-approve"}
+              isNested
+            />
           </NavGroup>
           <NavGroup
             icon={<ChartBarStacked size={20} />}

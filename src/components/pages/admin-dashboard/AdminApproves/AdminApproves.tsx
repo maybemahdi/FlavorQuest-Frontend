@@ -13,7 +13,6 @@ import Image from "next/image";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
 import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
-import MyFormSelect from "@/components/ui/MyForm/MyFormSelect/MyFormSelect";
 import { toast } from "sonner";
 import {
   useGetAllPostsQuery,
@@ -43,14 +42,12 @@ type TPost = {
 const AdminApproves = () => {
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
   const [searchTerm, setSearchTerm] = useState("");
-  const [role, setRole] = useState("");
   const [updated] = useUpdatePostsMutation();
 
   const { data: postsData, isFetching} = useGetAllPostsQuery({
     page: pagination.current,
     limit: pagination.pageSize,
     searchTerm,
-    role,
     status:"APPROVED"
   });
 
@@ -183,18 +180,6 @@ const AdminApproves = () => {
             name="searchTerm"
             placeHolder="Search by title"
             onValueChange={(val) => setSearchTerm(val)}
-          />
-          <MyFormSelect
-            name="role"
-            placeHolder="Filter by role"
-            options={[
-              { label: "ADMIN", value: "ADMIN" },
-              { label: "USER", value: "USER" },
-              { label: "PREMIUM_USER", value: "PREMIUM_USER" },
-            ]}
-            isSearch
-            onValueChange={(val) => setRole(val)}
-            className="min-w-[220px]"
           />
         </div>
       </MyFormWrapper>
