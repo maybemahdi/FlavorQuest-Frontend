@@ -1,11 +1,25 @@
 "use client";
 import React, { useState } from "react";
-import { Table, Tag, TableColumnsType, Pagination } from "antd";
+import {
+  Table,
+  Tag,
+  TableColumnsType,
+  Pagination,
+  Modal,
+} from "antd";
 import type { TableProps } from "antd";
+import { zodResolver } from "@hookform/resolvers/zod";
 import "./pagination.css";
 import Image from "next/image";
-import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
-
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+} from "@ant-design/icons";
+import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
+import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
+import MyButton from "@/components/ui/MyButton/MyButton";
+import { toast } from "sonner";
+import { z } from "zod";
 
 type TPost = {
   id: string;
@@ -26,6 +40,10 @@ type TPost = {
     status: string;
   };
 };
+
+const postSchema = z.object({
+  adminComment: z.string().min(1, { message: "Admin comment is required" }),
+});
 
 const mockData: TPost[] = [
   {
@@ -72,13 +90,39 @@ const mockData: TPost[] = [
   },
 ];
 
-const Mannagepost = () => {
+const ManagePost = () => {
   const [pagination, setPagination] = useState({ current: 1, pageSize: 5 });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [actionStatus, setActionStatus] = useState<"APPROVED" | "REJECTED" | null>(null);
+  const [selectedPost, setSelectedPost] = useState<TPost | null>(null);
 
   const paginatedData = mockData.slice(
     (pagination.current - 1) * pagination.pageSize,
     pagination.current * pagination.pageSize
   );
+
+  const handleOpenModal = (status: "APPROVED" | "REJECTED", post: TPost) => {
+    setActionStatus(status);
+    setSelectedPost(post);
+    setIsModalOpen(true);
+  };
+
+  const handleFormSubmit = (data: { adminComment: string }, reset: () => void) => {
+    if (selectedPost) {
+      const result = {
+        id: selectedPost.id,
+        status: actionStatus,
+        adminComment: data.adminComment,
+      };
+
+      console.log(result);
+
+
+      toast.success("Post updated successfully!");
+      setIsModalOpen(false);
+      reset();
+    }
+  };
 
   const columns: TableColumnsType<TPost> = [
     {
@@ -115,7 +159,7 @@ const Mannagepost = () => {
       title: "Posted By",
       dataIndex: "user",
       render: (user) => (
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <Image
             src={user.profilePhoto}
             alt="User"
@@ -133,18 +177,23 @@ const Mannagepost = () => {
       render: (_: any, record: TPost) => (
         <div className="flex gap-4">
           <CheckCircleOutlined
-            onClick={() => console.log("Approved:", record.id)}
-            className={`text-xl cursor-pointer ${record.status === "APPROVED" ? "text-gray-400 cursor-not-allowed" : "text-green-600 hover:text-green-800"}`}
-            style={{ pointerEvents: record.status === "APPROVED" ? "none" : "auto" }}
+            onClick={() => handleOpenModal("APPROVED", record)}
+            className={`text-xl cursor-pointer ${
+              record.status === "APPROVED"
+                ? "text-gray-400 cursor-not-allowed"
+                : "text-green-600 hover:text-green-800"
+            }`}
+            style={{
+              pointerEvents: record.status === "APPROVED" ? "none" : "auto",
+            }}
           />
           <CloseCircleOutlined
-            onClick={() => console.log("Rejected:", record.id)}
+            onClick={() => handleOpenModal("REJECTED", record)}
             className="text-xl text-red-500 hover:text-red-700 cursor-pointer"
           />
         </div>
       ),
-    }
-    
+    },
   ];
 
   const onChange: TableProps<TPost>["onChange"] = (paginationConfig, _filters, _sorter, extra) => {
@@ -176,12 +225,34 @@ const Mannagepost = () => {
           total={mockData.length}
           showSizeChanger
           showQuickJumper
-          pageSizeOptions={["1","2", "5", "10"]}
+          pageSizeOptions={["1", "2", "5", "10"]}
           onChange={(page, pageSize) => setPagination({ current: page, pageSize })}
         />
       </div>
+
+      <Modal
+        title={`${actionStatus} Post`}
+        open={isModalOpen}
+        onCancel={() => {
+          setIsModalOpen(false);
+        }}
+        footer={null}
+      >
+        <MyFormWrapper
+          resolver={zodResolver(postSchema)}
+          onSubmit={handleFormSubmit}
+          className="space-y-4"
+        >
+          <MyFormInput
+            name="adminComment"
+            placeHolder="Enter admin comment"
+            type="text"
+          />
+          <MyButton type="submit" label="Submit" fullWidth />
+        </MyFormWrapper>
+      </Modal>
     </div>
   );
 };
 
-export default Mannagepost;
+export default ManagePost;
