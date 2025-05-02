@@ -5,25 +5,18 @@ import {
   Tag,
   TableColumnsType,
   Pagination,
-  Modal,
+  Popconfirm,
 } from "antd";
 import type { TableProps } from "antd";
-import { zodResolver } from "@hookform/resolvers/zod";
 import "./pagination.css";
 import Image from "next/image";
-import {
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-} from "@ant-design/icons";
+import { CheckCircleOutlined } from "@ant-design/icons";
 import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
 import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
 import MyFormSelect from "@/components/ui/MyForm/MyFormSelect/MyFormSelect";
-import MyButton from "@/components/ui/MyButton/MyButton";
-import { toast } from "sonner";
-import { z } from "zod";
+// import { toast } from "sonner";
 import {
   useGetAllPostsQuery,
-  useUpdatePostsMutation,
 } from "@/redux/features/admin/admin.api";
 
 type TPost = {
@@ -46,58 +39,23 @@ type TPost = {
   };
 };
 
-const postSchema = z.object({
-  adminComment: z.string().min(1, { message: "Admin comment is required" }),
-});
-
-const ManagePost = () => {
+const AdminApproves = () => {
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [actionStatus, setActionStatus] = useState<"APPROVED" | "REJECTED" | null>(null);
-  const [selectedPost, setSelectedPost] = useState<TPost | null>(null);
-  const [updated] = useUpdatePostsMutation();
-
   const [searchTerm, setSearchTerm] = useState("");
   const [role, setRole] = useState("");
 
-  const { data: postsData, isFetching } = useGetAllPostsQuery({
+  const { data: postsData, isFetching} = useGetAllPostsQuery({
     page: pagination.current,
     limit: pagination.pageSize,
     searchTerm,
-    role
+    role,
+    status:"APPROVED"
   });
 
-  const handleOpenModal = (status: "APPROVED" | "REJECTED", post: TPost) => {
-    setActionStatus(status);
-    setSelectedPost(post);
-    setIsModalOpen(true);
-  };
+  
 
-  const handleFormSubmit = async (
-    data: { adminComment: string },
-    reset: () => void
-  ) => {
-    if (selectedPost) {
-      const result = {
-        status: actionStatus,
-        adminComment: data.adminComment,
-      };
-
-      try {
-        const result1 = await updated({
-          data: result,
-          order_id: selectedPost.id,
-        }).unwrap();
-
-        console.log(result1);
-        toast.success("Post updated successfully!");
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        toast.error("Post not updated!");
-      }
-      setIsModalOpen(false);
-      reset();
-    }
+  const handleApprove = async (post: TPost) => {
+     console.log(post)
   };
 
   const columns: TableColumnsType<TPost> = [
@@ -167,38 +125,38 @@ const ManagePost = () => {
       ),
     },
     {
-      title: "Actions",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      render: (_: any, record: TPost) => {
-        const isPending = record.status === "PENDING";
+      title: "Action",
+      render: (_: unknown, record: TPost) => {
+        const canApprove =
+          record.status === "APPROVED" && !record.isPremium;
 
         return (
-          <div className="flex gap-4">
+          <Popconfirm
+            title="Are you sure to approve this post?"
+            onConfirm={() => handleApprove(record)}
+            okText="Yes"
+            cancelText="No"
+            disabled={!canApprove}
+          >
             <CheckCircleOutlined
-              onClick={() => isPending && handleOpenModal("APPROVED", record)}
-              className={`text-xl cursor-pointer ${
-                isPending ? "text-green-600 hover:text-green-800" : "text-gray-400 cursor-not-allowed"
+              className={`text-xl ${
+                canApprove
+                  ? "text-green-600 hover:text-green-800 cursor-pointer"
+                  : "text-gray-400 cursor-not-allowed"
               }`}
-              style={{
-                pointerEvents: isPending ? "auto" : "none",
-              }}
             />
-            <CloseCircleOutlined
-              onClick={() => isPending && handleOpenModal("REJECTED", record)}
-              className={`text-xl cursor-pointer ${
-                isPending ? "text-red-500 hover:text-red-700" : "text-gray-400 cursor-not-allowed"
-              }`}
-              style={{
-                pointerEvents: isPending ? "auto" : "none",
-              }}
-            />
-          </div>
+          </Popconfirm>
         );
       },
     },
   ];
 
-  const onChange: TableProps<TPost>["onChange"] = (paginationConfig, _filters, _sorter, extra) => {
+  const onChange: TableProps<TPost>["onChange"] = (
+    paginationConfig,
+    _filters,
+    _sorter,
+    extra
+  ) => {
     if (extra.action === "paginate") {
       setPagination({
         current: paginationConfig.current!,
@@ -216,7 +174,6 @@ const ManagePost = () => {
             placeHolder="Search by title"
             onValueChange={(val) => setSearchTerm(val)}
           />
-
           <MyFormSelect
             name="role"
             placeHolder="Filter by role"
@@ -232,7 +189,6 @@ const ManagePost = () => {
         </div>
       </MyFormWrapper>
 
-      {/* 📋 Table Section */}
       <div className="overflow-x-auto">
         <Table
           columns={columns}
@@ -245,7 +201,6 @@ const ManagePost = () => {
         />
       </div>
 
-      {/* 📄 Pagination */}
       <div className="pagination-container mt-4 mb-4 flex justify-center">
         <Pagination
           current={pagination.current}
@@ -259,31 +214,8 @@ const ManagePost = () => {
           }
         />
       </div>
-
-      {/* 🛠️ Modal for Admin Action */}
-      <Modal
-        title={`${actionStatus} Post`}
-        open={isModalOpen}
-        onCancel={() => {
-          setIsModalOpen(false);
-        }}
-        footer={null}
-      >
-        <MyFormWrapper
-          resolver={zodResolver(postSchema)}
-          onSubmit={handleFormSubmit}
-          className="space-y-4"
-        >
-          <MyFormInput
-            name="adminComment"
-            placeHolder="Enter admin comment"
-            type="text"
-          />
-          <MyButton type="submit" label="Submit" fullWidth />
-        </MyFormWrapper>
-      </Modal>
     </div>
   );
 };
 
-export default ManagePost;
+export default AdminApproves;

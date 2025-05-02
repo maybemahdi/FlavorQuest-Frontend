@@ -24,6 +24,9 @@ const adminApi = baseApi.injectEndpoints({
           if (params.limit) {
             queryParams.append("limit", params.limit.toString());
           }
+          if(params.status){
+            queryParams.append("status", params.status.toString()); 
+          }
         }
       
         return {
