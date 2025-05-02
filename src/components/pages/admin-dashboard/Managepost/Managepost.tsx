@@ -100,14 +100,24 @@ const ManagePost = () => {
     {
       title: "Image",
       dataIndex: "image",
-      render: (img) => (
-        <Image
-          src={img}
-          alt="Post"
-          width={40}
-          height={40}
-          className="w-10 h-10 rounded-full"
-        />
+      render: (img: string) => (
+        img ? (
+          <Image
+            src={img}
+            alt="Post"
+            width={40}
+            height={40}
+            className="w-10 h-10 rounded-full"
+          />
+        ) : (
+          <Image
+            src="https://i.postimg.cc/nLRNMYzn/02.jpg"
+            alt="Default Image"
+            width={40}
+            height={40}
+            className="w-10 h-10 rounded-full"
+          />
+        )
       ),
     },
     {
