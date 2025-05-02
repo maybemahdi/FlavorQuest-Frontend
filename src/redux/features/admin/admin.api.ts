@@ -4,69 +4,105 @@ import { baseApi } from "../../api/baseApi";
 
 const adminApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    // Get all posts
     getAllPosts: builder.query({
       query: (params) => {
-        const queryParams = new URLSearchParams();
-      
+        const queryParams: Record<string, string> = {};
+
         if (params) {
           if (params.searchTerm?.trim()) {
-            queryParams.append("searchTerm", params.searchTerm.trim());
+            queryParams.searchTerm = params.searchTerm.trim();
           }
-      
+
           if (params.role?.trim()) {
-            queryParams.append("role", params.role);
+            queryParams.role = params.role;
           }
-      
+
           if (params.page) {
-            queryParams.append("page", params.page.toString());
+            queryParams.page = params.page.toString();
           }
-      
+
           if (params.limit) {
-            queryParams.append("limit", params.limit.toString());
+            queryParams.limit = params.limit.toString();
           }
-          if(params.status){
-            queryParams.append("status", params.status.toString()); 
+
+          if (params.status) {
+            queryParams.status = params.status.toString();
           }
         }
-      
+
         return {
           url: "/post",
           method: "GET",
           params: queryParams,
         };
       },
-      
-      transformResponse: (response: any) => {
-        return {
-          data: response.data?.data,
-          meta: response.data?.meta,
-        };
-      },
+      transformResponse: (response: any) => ({
+        data: response.data?.data,
+        meta: response.data?.meta,
+      }),
       providesTags: ["admin"],
     }),
-  
+
+    // Update posts
     updatePosts: builder.mutation({
       query: ({ data, order_id }) => {
-        console.log(data, order_id);
         return {
           url: `/post/update/${order_id}`,
           method: "PATCH",
           body: data,
         };
       },
-      transformResponse: (response: any) => {
-        return {
-          data: response.data,
-        };
-      },
+      transformResponse: (response: any) => ({
+        data: response.data,
+      }),
       invalidatesTags: ["admin"],
     }),
+
+    // Get all users
+    getAllUser: builder.query({
+      query: (params) => {
+        const queryParams: Record<string, string> = {};
+
+        if (params) {
+          if (params.searchTerm?.trim()) {
+            queryParams.searchTerm = params.searchTerm.trim();
+          }
+
+          if (params.role?.trim()) {
+            queryParams.role = params.role;
+          }
+
+          if (params.page) {
+            queryParams.page = params.page.toString();
+          }
+
+          if (params.limit) {
+            queryParams.limit = params.limit.toString();
+          }
+
+          if (params.status) {
+            queryParams.status = params.status;
+          }
+        }
+
+        return {
+          url: "/users",
+          method: "GET",
+          params: queryParams,
+        };
+      },
+      transformResponse: (response: any) => ({
+        data: response.data?.data,
+        meta: response.data?.paginateData
+      }),
+      providesTags: ["admin"],
+    }),
   }),
-  
 });
 
 export const { 
   useGetAllPostsQuery,
-  useUpdatePostsMutation
-
+  useUpdatePostsMutation,
+  useGetAllUserQuery
 } = adminApi;
