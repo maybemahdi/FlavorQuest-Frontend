@@ -84,12 +84,12 @@ const ManagePost = () => {
       };
 
       try {
-        const result1 = await updated({
+         await updated({
           data: result,
           order_id: selectedPost.id,
         }).unwrap();
 
-        console.log(result1);
+        
         toast.success("Post updated successfully!");
       // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
       } catch (error: any) {

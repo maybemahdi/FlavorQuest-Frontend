@@ -14,9 +14,10 @@ import { CheckCircleOutlined } from "@ant-design/icons";
 import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
 import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
 import MyFormSelect from "@/components/ui/MyForm/MyFormSelect/MyFormSelect";
-// import { toast } from "sonner";
+import { toast } from "sonner";
 import {
   useGetAllPostsQuery,
+  useUpdatePostsMutation,
 } from "@/redux/features/admin/admin.api";
 
 type TPost = {
@@ -43,6 +44,7 @@ const AdminApproves = () => {
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const [role, setRole] = useState("");
+  const [updated] = useUpdatePostsMutation();
 
   const { data: postsData, isFetching} = useGetAllPostsQuery({
     page: pagination.current,
@@ -55,7 +57,15 @@ const AdminApproves = () => {
   
 
   const handleApprove = async (post: TPost) => {
-     console.log(post)
+     if(post.id){
+       await updated({
+        data: {
+          "isPremium": true
+        },
+        order_id: post.id,
+       })
+       toast.success("Post Approved successfully!");
+     }
   };
 
   const columns: TableColumnsType<TPost> = [
