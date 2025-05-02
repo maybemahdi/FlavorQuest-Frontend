@@ -48,7 +48,7 @@ const postSchema = z.object({
 });
 
 const ManagePost = () => {
-  const [pagination, setPagination] = useState({ current: 1, pageSize: 5 });
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionStatus, setActionStatus] = useState<"APPROVED" | "REJECTED" | null>(null);
   const [selectedPost, setSelectedPost] = useState<TPost | null>(null);
@@ -59,7 +59,7 @@ const ManagePost = () => {
     limit: pagination.pageSize,
   });
 
-  console.log(postsData)
+  
 
   const handleOpenModal = (status: "APPROVED" | "REJECTED", post: TPost) => {
     setActionStatus(status);
