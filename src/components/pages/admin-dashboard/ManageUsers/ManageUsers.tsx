@@ -4,9 +4,11 @@ import {
   Tag,
   Pagination,
   Tooltip,
+  Popconfirm,
+  message,
 } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
-import { useGetAllUserQuery } from "@/redux/features/admin/admin.api";
+import { useGetAllUserQuery, useDeleteUserMutation } from "@/redux/features/admin/admin.api";
 import { useState } from "react";
 import {
   StopOutlined,
@@ -32,7 +34,17 @@ const ManageUsers = () => {
     limit: pagination.pageSize,
   });
 
-  console.log(userData)
+  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
+
+  const handleDelete = async (userId: string) => {
+    try {
+      await deleteUser(userId).unwrap();
+      message.success("User deleted successfully!");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    } catch (error:any) {
+      message.error("Failed to delete user!");
+    }
+  };
 
   const users = userData?.data || [];
 
@@ -95,19 +107,23 @@ const ManageUsers = () => {
                 }}
               />
             </Tooltip>
+
             <Tooltip title="Delete User">
-              <DeleteOutlined
-                className={`text-xl ${
-                  isDisabled
-                    ? "text-gray-400 cursor-not-allowed"
-                    : "text-red-500 hover:text-red-600 cursor-pointer"
-                }`}
-                onClick={() => {
-                  if (!isDisabled) {
-                    console.log("Delete user:", record.id);
-                  }
-                }}
-              />
+              <Popconfirm
+                title="Are you sure to delete this user?"
+                onConfirm={() => handleDelete(record.id)}
+                okText="Yes"
+                cancelText="No"
+                disabled={isDisabled}
+              >
+                <DeleteOutlined
+                  className={`text-xl ${
+                    isDisabled
+                      ? "text-gray-400 cursor-not-allowed"
+                      : "text-red-500 hover:text-red-600 cursor-pointer"
+                  }`}
+                />
+              </Popconfirm>
             </Tooltip>
           </div>
         );
@@ -127,7 +143,7 @@ const ManageUsers = () => {
       <Table
         columns={columns}
         dataSource={users}
-        loading={isFetching}
+        loading={isFetching || isDeleting}
         pagination={false}
         rowKey="id"
         scroll={{ x: 900 }}

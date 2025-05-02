@@ -4,6 +4,7 @@ import { baseApi } from "../../api/baseApi";
 
 const adminApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+
     // Get all posts
     getAllPosts: builder.query({
       query: (params) => {
@@ -94,15 +95,26 @@ const adminApi = baseApi.injectEndpoints({
       },
       transformResponse: (response: any) => ({
         data: response.data?.data,
-        meta: response.data?.paginateData
+        meta: response.data?.paginateData,
       }),
       providesTags: ["admin"],
     }),
+
+    
+    deleteUser: builder.mutation({
+      query: (userId: string) => ({
+        url: `/users/delete/${userId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["admin"],
+    }),
+
   }),
 });
 
-export const { 
+export const {
   useGetAllPostsQuery,
   useUpdatePostsMutation,
-  useGetAllUserQuery
+  useGetAllUserQuery,
+  useDeleteUserMutation, 
 } = adminApi;
