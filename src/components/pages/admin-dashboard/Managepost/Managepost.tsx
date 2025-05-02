@@ -4,7 +4,8 @@ import { Table, Tag, TableColumnsType, Pagination } from "antd";
 import type { TableProps } from "antd";
 import "./pagination.css";
 import Image from "next/image";
-import MyButton from "@/components/ui/MyButton/MyButton";
+import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+
 
 type TPost = {
   id: string;
@@ -130,23 +131,20 @@ const Mannagepost = () => {
       title: "Actions",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (_: any, record: TPost) => (
-        <div className="flex gap-2">
-          <MyButton
-            label="Approve"
-            variant="filled"
-            isDisabled={record.status === "APPROVED"}
+        <div className="flex gap-4">
+          <CheckCircleOutlined
             onClick={() => console.log("Approved:", record.id)}
-            className="text-sm px-4 py-2"
+            className={`text-xl cursor-pointer ${record.status === "APPROVED" ? "text-gray-400 cursor-not-allowed" : "text-green-600 hover:text-green-800"}`}
+            style={{ pointerEvents: record.status === "APPROVED" ? "none" : "auto" }}
           />
-          <MyButton
-            label="Reject"
-            variant="outline"
+          <CloseCircleOutlined
             onClick={() => console.log("Rejected:", record.id)}
-            className="text-sm px-4 py-2 text-red-500 border-red-500 hover:bg-red-100"
+            className="text-xl text-red-500 hover:text-red-700 cursor-pointer"
           />
         </div>
       ),
     }
+    
   ];
 
   const onChange: TableProps<TPost>["onChange"] = (paginationConfig, _filters, _sorter, extra) => {
