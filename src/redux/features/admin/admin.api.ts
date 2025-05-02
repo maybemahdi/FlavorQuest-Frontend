@@ -2,25 +2,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { baseApi } from "../../api/baseApi";
 
+// Define the API for the admin
 const adminApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllPosts: builder.query({
-      query: (data) => {
-        const params = new URLSearchParams();
-
-        if (data?.queryObj) {
-          data?.queryObj.forEach((item: any) => {
-            params.append(item.name, item.value as string);
+      query: (params) => {
+        const queryParams = new URLSearchParams();
+        if (params) {
+          Object.entries(params).forEach(([key, value]) => {
+            queryParams.append(key, value as string);
           });
         }
 
+        console.log(queryParams.toString()); 
+
         return {
-          url: "api/v1/post",
+          url: "/post",
           method: "GET",
-          params,
+          params: queryParams,
         };
       },
-      providesTags: ["admin"],
+      transformResponse: (response:any) => {
+        return {
+          data: response.data?.data,
+          meta: response.data?.meta,
+        };
+      },
+      providesTags: ["admin"], 
     }),
   }),
 });

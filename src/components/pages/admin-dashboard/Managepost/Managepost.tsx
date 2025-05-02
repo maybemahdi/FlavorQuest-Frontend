@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useState } from "react";
 import {
   Table,
@@ -9,6 +9,7 @@ import {
 } from "antd";
 import type { TableProps } from "antd";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import "./pagination.css";
 import Image from "next/image";
 import {
@@ -20,6 +21,7 @@ import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
 import MyButton from "@/components/ui/MyButton/MyButton";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useGetAllPostsQuery } from "@/redux/features/admin/admin.api";
 
 type TPost = {
   id: string;
@@ -45,61 +47,19 @@ const postSchema = z.object({
   adminComment: z.string().min(1, { message: "Admin comment is required" }),
 });
 
-const mockData: TPost[] = [
-  {
-    id: "1",
-    title: "Chips & Salsa",
-    location: "Dhaka, Bangladesh",
-    minPrice: 50,
-    maxPrice: 80,
-    image:
-      "https://res.cloudinary.com/dxm5tpw0l/image/upload/v1745994335/o7wrbcda4xj-1745994394331-file-Test-IMAGE.png",
-    status: "APPROVED",
-    isPremium: true,
-    user: {
-      id: "u1",
-      name: "John Doe",
-      email: "johndoe@gmail.com",
-      profilePhoto:
-        "https://res.cloudinary.com/dxm5tpw0l/image/upload/v1746014285/clk5h9uls1r-1746014346492-file-Test-IMAGE.png",
-      contactNumber: "+1234567890",
-      role: "USER",
-      status: "ACTIVE",
-    },
-  },
-  {
-    id: "2",
-    title: "Mango Smoothie",
-    location: "Sylhet, Bangladesh",
-    minPrice: 100,
-    maxPrice: 150,
-    image:
-      "https://res.cloudinary.com/dxm5tpw0l/image/upload/v1745994436/n1qiemnpz2e-1745994495641-file-Test-IMAGE.png",
-    status: "PENDING",
-    isPremium: false,
-    user: {
-      id: "u2",
-      name: "Jane Smith",
-      email: "janesmith@gmail.com",
-      profilePhoto:
-        "https://res.cloudinary.com/dxm5tpw0l/image/upload/v1746014330/abcdefghi1234-image.png",
-      contactNumber: "+9876543210",
-      role: "USER",
-      status: "ACTIVE",
-    },
-  },
-];
-
 const ManagePost = () => {
   const [pagination, setPagination] = useState({ current: 1, pageSize: 5 });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionStatus, setActionStatus] = useState<"APPROVED" | "REJECTED" | null>(null);
   const [selectedPost, setSelectedPost] = useState<TPost | null>(null);
 
-  const paginatedData = mockData.slice(
-    (pagination.current - 1) * pagination.pageSize,
-    pagination.current * pagination.pageSize
-  );
+ 
+  const { data: postsData, isFetching } = useGetAllPostsQuery({
+    page: pagination.current,
+    limit: pagination.pageSize,
+  });
+
+  console.log(postsData)
 
   const handleOpenModal = (status: "APPROVED" | "REJECTED", post: TPost) => {
     setActionStatus(status);
@@ -116,7 +76,6 @@ const ManagePost = () => {
       };
 
       console.log(result);
-
 
       toast.success("Post updated successfully!");
       setIsModalOpen(false);
@@ -178,11 +137,7 @@ const ManagePost = () => {
         <div className="flex gap-4">
           <CheckCircleOutlined
             onClick={() => handleOpenModal("APPROVED", record)}
-            className={`text-xl cursor-pointer ${
-              record.status === "APPROVED"
-                ? "text-gray-400 cursor-not-allowed"
-                : "text-green-600 hover:text-green-800"
-            }`}
+            className={`text-xl cursor-pointer ${record.status === "APPROVED" ? "text-gray-400 cursor-not-allowed" : "text-green-600 hover:text-green-800"}`}
             style={{
               pointerEvents: record.status === "APPROVED" ? "none" : "auto",
             }}
@@ -210,10 +165,11 @@ const ManagePost = () => {
       <div className="overflow-x-auto">
         <Table
           columns={columns}
-          dataSource={paginatedData}
+          dataSource={postsData?.data || []}
           pagination={false}
           rowKey="id"
           onChange={onChange}
+          loading={isFetching}
           scroll={{ x: 900 }}
         />
       </div>
@@ -222,7 +178,7 @@ const ManagePost = () => {
         <Pagination
           current={pagination.current}
           pageSize={pagination.pageSize}
-          total={mockData.length}
+          total={postsData?.meta?.total || 0}
           showSizeChanger
           showQuickJumper
           pageSizeOptions={["1", "2", "5", "10"]}
