@@ -2,6 +2,7 @@
 import MyContainer from "@/components/shared/MyContainer/MyContainer";
 import SectionHead from "@/components/shared/SectionHead/SectionHead";
 import { MapPin, Star, Unlock } from "lucide-react";
+import Link from "next/link";
 
 export default function PremiumBenefits() {
   const benefits = [
@@ -48,9 +49,9 @@ export default function PremiumBenefits() {
         </div>
 
         <div className="text-center mt-12">
-          <button className="bg-gradient-to-r from-amber-500 to-primary text-white px-8 py-3 rounded-full font-bold hover:shadow-lg transition-all">
+          <Link href={"/checkout"} className="bg-gradient-to-r from-amber-500 to-primary text-white px-8 py-3 rounded-full font-bold hover:shadow-lg transition-all">
             Upgrade to Premium
-          </button>
+          </Link>
         </div>
       </MyContainer>
     </section>

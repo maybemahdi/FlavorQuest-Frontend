@@ -37,7 +37,18 @@ const paymentApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["payment"],
     }),
+    verifyPayment: builder.mutation({
+      query: (data) => {
+        return {
+          url: "/subscribe/verify",
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["payment"],
+    }),
   }),
 });
 
-export const { useCreatePaymentMutation } = paymentApi;
+export const { useCreatePaymentMutation, useVerifyPaymentMutation } =
+  paymentApi;

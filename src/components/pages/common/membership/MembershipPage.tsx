@@ -85,7 +85,7 @@ export default function MembershipPage() {
                 </div>
                 <h3 className="text-2xl font-bold mb-2">Premium Membership</h3>
                 <div className="flex items-end mb-6">
-                  <span className="text-5xl font-bold">$9.99</span>
+                  <span className="text-5xl font-bold">999 BDT</span>
                 </div>
                 <p className="mb-8">One time payment, lifetime service!</p>
 

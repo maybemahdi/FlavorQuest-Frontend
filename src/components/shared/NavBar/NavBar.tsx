@@ -15,19 +15,21 @@ import MyButton from "@/components/ui/MyButton/MyButton";
 import { menuItems } from "@/data/menuItems";
 import { LogOut, Menu, X } from "lucide-react";
 import MyContainer from "../MyContainer/MyContainer";
+import { useLogoutUserMutation } from "@/redux/features/auth/authApi";
 
 interface DecodedUser extends JwtPayload {
   role: string;
 }
 const NavBar = () => {
   const dispatch = useAppDispatch();
+  const [logoutUser] = useLogoutUserMutation();
   const pathname = usePathname();
   const router = useRouter();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const currentUserToken = useAppSelector(selectCurrentToken);
   const currentUser = currentUserToken ? verifyToken(currentUserToken) : null;
 
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -36,9 +38,10 @@ const NavBar = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, Log out!",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
         dispatch(logout());
+        await logoutUser(undefined);
         Swal.fire({
           title: "Successful!",
           text: "Your have been logged out.",
@@ -267,7 +270,7 @@ const NavBar = () => {
               />
               <button
                 onClick={handleLogOut}
-                className="bg-slate-100 flex items-center gap-2 justify-center hover:bg-slate-200 transition-all duration-300 px-3 py-2 rounded-md text-gray-500"
+                className="bg-slate-100 rounded-full flex items-center gap-2 justify-center hover:bg-slate-200 transition-all duration-300 px-3 py-3 text-gray-500"
               >
                 <LogOut /> Sign out
               </button>

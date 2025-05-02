@@ -5,21 +5,23 @@ import MyButton from "@/components/ui/MyButton/MyButton";
 import { useCreatePaymentMutation } from "@/redux/features/payment/payment.api";
 import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
 import { CheckCircle, CreditCard, Lock } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const CheckoutPage = () => {
   const [createPayment] = useCreatePaymentMutation();
+  const router = useRouter();
 
   const handlePayment = async () => {
     const res = await handleAsyncWithToast(async () => {
       return createPayment(undefined);
     }, "Payment proceeding");
     if (res?.data?.success) {
-      console.log(res);
+      router.push(res?.data?.data);
     }
   };
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-slate-100/90 py-12">
       <MyContainer>
         {/* Header */}
         <div className="text-center mb-10">
@@ -44,11 +46,11 @@ const CheckoutPage = () => {
             <div className="border-b border-gray-200 pb-4">
               <div className="flex justify-between">
                 <span className="text-gray-600">Premium Membership</span>
-                <span className="font-medium">$9.99/lifetime</span>
+                <span className="font-medium">999 BDT/lifetime</span>
               </div>
               <div className="flex justify-between mt-2">
                 <span className="text-gray-600">Price</span>
-                <span className="font-medium">$9.99</span>
+                <span className="font-medium">999 BDT</span>
               </div>
             </div>
 
@@ -63,7 +65,7 @@ const CheckoutPage = () => {
             <div className="border-t border-gray-200 pt-4">
               <div className="flex justify-between font-bold text-lg">
                 <span>Total</span>
-                <span>$9.99</span>
+                <span>999 BDT</span>
               </div>
             </div>
 

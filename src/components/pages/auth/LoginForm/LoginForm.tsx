@@ -26,7 +26,7 @@ const loginSchema = z.object({
     .string({
       required_error: "Password is required",
     })
-    .min(8, "Password must be at least 8 characters long"),
+    .min(6, "Password must be at least 6 characters long"),
 });
 
 export default function LoginForm() {
@@ -54,7 +54,7 @@ export default function LoginForm() {
         dispatch(
           setUser({
             user: user,
-            token: response?.data?.data?.accessToken,
+            access_token: response?.data?.data?.accessToken,
           })
         );
         toast.success(response?.data?.message);
