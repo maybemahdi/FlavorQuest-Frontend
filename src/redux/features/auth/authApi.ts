@@ -86,7 +86,7 @@ const authApi = baseApi.injectEndpoints({
     }),
     getMe: builder.query({
       query: () => ({
-        url: "user/me",
+        url: "/users/my-profile",
         method: "GET",
       }),
       providesTags: ["user"],

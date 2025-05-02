@@ -1,15 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Menu, Search, Bell, X } from "lucide-react";
+import { logout } from "@/redux/features/auth/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
+import { Menu } from "lucide-react";
 import Link from "next/link";
-import { ThemeToggle } from "./theme-toggle";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { FiLogOut } from "react-icons/fi";
 import { RxAvatar } from "react-icons/rx";
 import Swal from "sweetalert2";
-import { logout } from "@/redux/features/auth/authSlice";
-import { useAppDispatch } from "@/redux/hooks";
-import { useRouter } from "next/navigation";
+import { ThemeToggle } from "./theme-toggle";
 
 interface TopBarProps {
   onMenuClickAction: () => void;
@@ -73,61 +74,10 @@ export default function TopBar({ onMenuClickAction }: TopBarProps) {
         <Menu size={20} />
       </button>
 
-
-      <h5 className="font-semibold text-lg">Dashboard</h5>
-
-      {/* Search bar */}
-      <div
-        className={`
-        relative flex items-center ml-auto transition-all duration-200
-        ${isSearchActive ? "flex-1" : "w-auto"}
-      `}
-      >
-        {isSearchActive ? (
-          <div className="flex items-center w-full bg-muted rounded-md">
-            <Search size={18} className="ml-3 text-muted-foreground" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search..."
-              className="w-full px-2 py-2 bg-transparent border-none outline-none"
-              autoFocus
-            />
-            <button
-              onClick={() => {
-                setIsSearchActive(false);
-                setSearchQuery("");
-              }}
-              className="p-2 mr-1 hover:bg-accent rounded-md"
-            >
-              <X size={18} />
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => setIsSearchActive(true)}
-            className="p-2 rounded-md hover:bg-muted transition-colors"
-            aria-label="Search"
-          >
-            <Search size={20} />
-          </button>
-        )}
-      </div>
+      <h5 className="font-semibold text-lg flex-1">Dashboard</h5>
 
       {/* Theme toggle */}
       <ThemeToggle />
-
-      {/* Notifications */}
-      <div className="relative">
-        <button
-          className="p-2 rounded-md hover:bg-muted transition-colors relative"
-          aria-label="Notifications"
-        >
-          <Bell size={20} />
-          <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
-        </button>
-      </div>
 
       {/* User account - smaller screens only */}
       <div ref={dropdownRef} className="relative">

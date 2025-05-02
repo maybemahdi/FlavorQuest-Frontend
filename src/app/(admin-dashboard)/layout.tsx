@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 const layout = ({ children }: { children: ReactNode }) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      <DashboardLayout>{children}</DashboardLayout>
+      <DashboardLayout role="admin">{children}</DashboardLayout>
     </ThemeProvider>
   );
 };

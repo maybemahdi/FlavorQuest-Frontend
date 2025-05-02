@@ -1,25 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import {
-  Home,
-  LayoutDashboard,
-  ShoppingBag,
-  Settings,
-  Users,
-  CreditCard,
-  FileText,
-  Calendar,
-  BarChart3,
+  ChartBarIncreasing,
+  ChartBarStacked,
   ChevronDown,
   ChevronsRight,
+  Dot,
+  Home,
+  LayoutDashboard,
+  MapPinned,
+  ShieldQuestion,
+  ShoppingBag,
+  UserPen,
+  Users,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 import Logo from "./logo";
 
-export default function Sidebar() {
+export default function Sidebar({ role }: { role: string }) {
   return (
     <div className="h-full flex flex-col border-r border-border">
       <div className="flex items-center justify-between h-16 px-4 border-b border-border">
@@ -29,7 +30,7 @@ export default function Sidebar() {
       </div>
 
       <div className="flex-1 py-4 overflow-y-auto">
-        <Nav />
+        <Nav role={role} />
       </div>
 
       <div className="p-4 border-t border-border">
@@ -39,87 +40,117 @@ export default function Sidebar() {
   );
 }
 
-function Nav() {
+function Nav({ role }: { role: string }) {
   const pathname = usePathname();
 
   return (
     <div className="space-y-1 px-3">
-      <NavItem
-        href="/dashboard/...."
-        icon={<Home size={20} />}
-        label="Home"
-        isActive={pathname === "/"}
-      />
+      {/* Admin only */}
+      {role === "admin" && (
+        <>
+          <NavItem
+            href="/dashboard"
+            icon={<ChartBarIncreasing size={20} />}
+            label="Dashboard"
+            isActive={pathname === "/dashboard"}
+          />
+          <NavItem
+            href="/dashboard/manage-users"
+            icon={<Users size={20} />}
+            label="Manage Users"
+            isActive={pathname === "/dashboard/manage-users"}
+          />
+          <NavGroup icon={<MapPinned size={20} />} label="Manage Food Spots">
+            <NavItem
+              href="/dashboard/all-posts"
+              label="All Posts"
+              isActive={pathname === "/dashboard/all-posts"}
+              isNested
+            />
+            <NavItem
+              href="/dashboard/my-posts"
+              label="My Posts"
+              isActive={pathname === "/dashboard/my-posts"}
+              isNested
+            />
+            <NavItem
+              href="/dashboard/create-post"
+              label="Create Post"
+              isActive={pathname === "/dashboard/create-post"}
+              isNested
+            />
+          </NavGroup>
+          <NavGroup
+            icon={<ChartBarStacked size={20} />}
+            label="Manage Categories"
+          >
+            <NavItem
+              href="/dashboard/all-categories"
+              label="All Categories"
+              isActive={pathname === "/dashboard/all-categories"}
+              isNested
+            />
+            <NavItem
+              href="/dashboard/create-category"
+              label="Create Category"
+              isActive={pathname === "/dashboard/create-category"}
+              isNested
+            />
+          </NavGroup>
+          <NavGroup icon={<ShieldQuestion size={20} />} label="Perform Actions">
+            <NavItem
+              href="/dashboard/all-comments"
+              label="All Comments"
+              isActive={pathname === "/dashboard/all-comments"}
+              isNested
+            />
+            <NavItem
+              href="/dashboard/all-ratings"
+              label="All Ratings"
+              isActive={pathname === "/dashboard/all-ratings"}
+              isNested
+            />
+          </NavGroup>
+          <NavItem
+            href="/dashboard/profile"
+            icon={<UserPen size={20} />}
+            label="Profile"
+            isActive={pathname === "/dashboard/profile"}
+          />
+        </>
+      )}
 
-      <NavItem
-        href="/dashboard"
-        icon={<LayoutDashboard size={20} />}
-        label="Dashboard"
-        isActive={pathname === "/dashboard"}
-      />
-
-      <NavGroup icon={<ShoppingBag size={20} />} label="Menu Items">
-        <NavItem
-          href="/menu/all"
-          label="All Items"
-          isActive={pathname === "/menu/all"}
-          isNested
-        />
-        <NavItem
-          href="/menu/categories"
-          label="Categories"
-          isActive={pathname === "/menu/categories"}
-          isNested
-        />
-        <NavItem
-          href="/menu/specials"
-          label="Specials"
-          isActive={pathname === "/menu/specials"}
-          isNested
-        />
-      </NavGroup>
-
-      <NavItem
-        href="/orders"
-        icon={<FileText size={20} />}
-        label="Orders"
-        isActive={pathname === "/orders"}
-      />
-
-      <NavItem
-        href="/calendar"
-        icon={<Calendar size={20} />}
-        label="Schedule"
-        isActive={pathname === "/calendar"}
-      />
-
-      <NavItem
-        href="/analytics"
-        icon={<BarChart3 size={20} />}
-        label="Analytics"
-        isActive={pathname === "/analytics"}
-      />
-
-      <NavItem
-        href="/customers"
-        icon={<Users size={20} />}
-        label="Customers"
-        isActive={pathname === "/customers"}
-      />
-
-      <NavItem
-        href="/payments"
-        icon={<CreditCard size={20} />}
-        label="Payments"
-        isActive={pathname === "/payments"}
-      />
-
-      <NavItem
-        href="/settings"
-        icon={<Settings size={20} />}
-        label="Settings"
-        isActive={pathname === "/settings"}
-      />
+      {/* User-only nav (example) */}
+      {role === "user" && (
+        <>
+          <NavItem
+            href="/user"
+            icon={<ChartBarIncreasing size={20} />}
+            label="Dashboard"
+            isActive={pathname === "/user"}
+          />
+          <NavGroup icon={<MapPinned size={20} />} label="Manage My Spots">
+            <NavItem
+              href="/user/my-posts"
+              label="My Posts"
+              isActive={pathname === "/user/my-posts"}
+              isNested
+            />
+            <NavItem
+              href="/user/create-post"
+              label="Create Post"
+              isActive={pathname === "/user/create-post"}
+              isNested
+            />
+          </NavGroup>
+          <NavItem
+            href="/user/profile"
+            icon={<UserPen size={20} />}
+            label="Profile"
+            isActive={pathname === "/dashboard/profile"}
+          />
+        </>
+      )}
     </div>
   );
 }
@@ -150,7 +181,7 @@ function NavItem({
     >
       {icon && <span className="flex-shrink-0">{icon}</span>}
       <span className="truncate flex items-center">
-        {isNested ? <ChevronsRight /> : ""}
+        {isNested ? <Dot /> : ""}
         {label}
       </span>
     </Link>

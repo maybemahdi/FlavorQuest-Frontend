@@ -58,9 +58,13 @@ const NavBar = () => {
         <Link
           rel="noopener noreferrer"
           href={
-            (currentUser as DecodedUser)?.role === "CUSTOMER"
-              ? "/profile/customer"
-              : "/profile/provider"
+            (currentUser as DecodedUser)?.role === "USER"
+              ? "/user/profile"
+              : (currentUser as DecodedUser)?.role === "PREMIUM_USER"
+              ? "/user/profile"
+              : (currentUser as DecodedUser)?.role === "ADMIN"
+              ? "/dashboard/profile"
+              : ""
           }
         >
           Profile
@@ -73,9 +77,13 @@ const NavBar = () => {
         <Link
           rel="noopener noreferrer"
           href={
-            (currentUser as DecodedUser)?.role === "CUSTOMER"
-              ? "/dashboard/customer"
-              : "/dashboard/provider"
+            (currentUser as DecodedUser)?.role === "USER"
+              ? "/user"
+              : (currentUser as DecodedUser)?.role === "PREMIUM_USER"
+              ? "/user"
+              : (currentUser as DecodedUser)?.role === "ADMIN"
+              ? "/dashboard"
+              : ""
           }
         >
           Dashboard
