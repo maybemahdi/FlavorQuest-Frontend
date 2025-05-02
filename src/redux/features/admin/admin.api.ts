@@ -7,25 +7,32 @@ const adminApi = baseApi.injectEndpoints({
     getAllPosts: builder.query({
       query: (params) => {
         const queryParams = new URLSearchParams();
-  
+      
         if (params) {
           if (params.searchTerm?.trim()) {
-            queryParams.append('searchTerm', params.searchTerm);
+            queryParams.append("searchTerm", params.searchTerm.trim());
           }
-  
-          Object.entries(params).forEach(([key, value]) => {
-            if (key !== "searchTerm") {
-              queryParams.append(key, value as string);
-            }
-          });
+      
+          if (params.role?.trim()) {
+            queryParams.append("role", params.role);
+          }
+      
+          if (params.page) {
+            queryParams.append("page", params.page.toString());
+          }
+      
+          if (params.limit) {
+            queryParams.append("limit", params.limit.toString());
+          }
         }
-  
+      
         return {
           url: "/post",
           method: "GET",
           params: queryParams,
         };
       },
+      
       transformResponse: (response: any) => {
         return {
           data: response.data?.data,

@@ -62,15 +62,15 @@ function Nav({ role }: { role: string }) {
           />
           <NavGroup icon={<MapPinned size={20} />} label="Manage Food Spots">
             <NavItem
-              href="/dashboard/all-posts"
+              href="/dashboard/managepost"
               label="All Posts"
-              isActive={pathname === "/dashboard/all-posts"}
+              isActive={pathname === "/dashboard/managepost"}
               isNested
             />
             <NavItem
-              href="/dashboard/my-posts"
+              href="/dashboard/my-post"
               label="My Posts"
-              isActive={pathname === "/dashboard/my-posts"}
+              isActive={pathname === "/dashboard/my-post"}
               isNested
             />
             <NavItem

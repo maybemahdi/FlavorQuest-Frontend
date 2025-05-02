@@ -17,7 +17,6 @@ import {
 } from "@ant-design/icons";
 import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
 import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
-import MyFormSelect from "@/components/ui/MyForm/MyFormSelect/MyFormSelect";
 import MyButton from "@/components/ui/MyButton/MyButton";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -50,23 +49,19 @@ const postSchema = z.object({
   adminComment: z.string().min(1, { message: "Admin comment is required" }),
 });
 
-const ManagePost = () => {
+const Myposts = () => {
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionStatus, setActionStatus] = useState<"APPROVED" | "REJECTED" | null>(null);
   const [selectedPost, setSelectedPost] = useState<TPost | null>(null);
   const [updated] = useUpdatePostsMutation();
-
   const [searchTerm, setSearchTerm] = useState("");
-  const [role, setRole] = useState("");
-
-  console.log(role)
 
   const { data: postsData, isFetching } = useGetAllPostsQuery({
     page: pagination.current,
     limit: pagination.pageSize,
     searchTerm,
-    role
+    role: "ADMIN",
   });
 
   const handleOpenModal = (status: "APPROVED" | "REJECTED", post: TPost) => {
@@ -86,12 +81,11 @@ const ManagePost = () => {
       };
 
       try {
-        const result1 = await updated({
+        await updated({
           data: result,
           order_id: selectedPost.id,
         }).unwrap();
 
-        console.log(result1);
         toast.success("Post updated successfully!");
       // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
       } catch (error: any) {
@@ -147,23 +141,13 @@ const ManagePost = () => {
       dataIndex: "user",
       render: (user) => (
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          {user.profilePhoto ? (
-            <Image
-              src={user.profilePhoto}
-              alt="User"
-              width={40}
-              height={40}
-              className="w-10 h-10 rounded-full"
-            />
-          ) : (
-            <Image
-              src="https://i.postimg.cc/nLRNMYzn/02.jpg"
-              alt="Default User"
-              width={40}
-              height={40}
-              className="w-10 h-10 rounded-full"
-            />
-          )}
+          <Image
+            src={user.profilePhoto || "https://i.postimg.cc/nLRNMYzn/02.jpg"}
+            alt="User"
+            width={40}
+            height={40}
+            className="w-10 h-10 rounded-full"
+          />
           {user.name}
         </div>
       ),
@@ -181,18 +165,14 @@ const ManagePost = () => {
               className={`text-xl cursor-pointer ${
                 isPending ? "text-green-600 hover:text-green-800" : "text-gray-400 cursor-not-allowed"
               }`}
-              style={{
-                pointerEvents: isPending ? "auto" : "none",
-              }}
+              style={{ pointerEvents: isPending ? "auto" : "none" }}
             />
             <CloseCircleOutlined
               onClick={() => isPending && handleOpenModal("REJECTED", record)}
               className={`text-xl cursor-pointer ${
                 isPending ? "text-red-500 hover:text-red-700" : "text-gray-400 cursor-not-allowed"
               }`}
-              style={{
-                pointerEvents: isPending ? "auto" : "none",
-              }}
+              style={{ pointerEvents: isPending ? "auto" : "none" }}
             />
           </div>
         );
@@ -218,23 +198,9 @@ const ManagePost = () => {
             placeHolder="Search by title"
             onValueChange={(val) => setSearchTerm(val)}
           />
-
-          <MyFormSelect
-            name="role"
-            placeHolder="Filter by role"
-            options={[
-              { label: "ADMIN", value: "ADMIN" },
-              { label: "USER", value: "USER" },
-              { label: "PREMIUM_USER", value: "PREMIUM_USER" },
-            ]}
-            isSearch
-            onValueChange={(val) => setRole(val)}
-            className="min-w-[220px]"
-          />
         </div>
       </MyFormWrapper>
 
-      {/* 📋 Table Section */}
       <div className="overflow-x-auto">
         <Table
           columns={columns}
@@ -247,7 +213,6 @@ const ManagePost = () => {
         />
       </div>
 
-      {/* 📄 Pagination */}
       <div className="pagination-container mt-4 mb-4 flex justify-center">
         <Pagination
           current={pagination.current}
@@ -262,13 +227,10 @@ const ManagePost = () => {
         />
       </div>
 
-      {/* 🛠️ Modal for Admin Action */}
       <Modal
         title={`${actionStatus} Post`}
         open={isModalOpen}
-        onCancel={() => {
-          setIsModalOpen(false);
-        }}
+        onCancel={() => setIsModalOpen(false)}
         footer={null}
       >
         <MyFormWrapper
@@ -288,4 +250,4 @@ const ManagePost = () => {
   );
 };
 
-export default ManagePost;
+export default Myposts;
