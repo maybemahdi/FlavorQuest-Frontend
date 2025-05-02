@@ -1,27 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 // components/FoodSpotCard.tsx
-import Image from "next/image";
-import {
-  Star,
-  MapPin,
-  Lock,
-  Heart,
-  MessageSquare,
-  ThumbsUp,
-} from "lucide-react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { IFoodSpot } from "@/types";
+import {
+  Lock,
+  MapPin,
+  MessageSquare,
+  Star,
+  ThumbsUp
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export function FoodSpotCard({
   spot,
-  onFavoriteToggle,
   showAdminInfo = false,
   className,
 }: {
   spot: IFoodSpot;
-  onFavoriteToggle: (id: string) => void;
   showAdminInfo?: boolean;
   className?: string;
 }) {
@@ -42,7 +39,6 @@ export function FoodSpotCard({
     commentsCount,
     votesCount,
     averageRating,
-    isFavorite = false,
   } = spot;
 
   const isApproved = status === "APPROVED";
@@ -88,7 +84,7 @@ export function FoodSpotCard({
           )}
 
           {/* Favorite Button */}
-          <button
+          {/* <button
             onClick={(e) => {
               e.preventDefault();
               onFavoriteToggle(id);
@@ -106,7 +102,7 @@ export function FoodSpotCard({
                   : "text-gray-400 hover:text-red-400"
               )}
             />
-          </button>
+          </button> */}
 
           {/* Status Badge */}
           {!isApproved && (

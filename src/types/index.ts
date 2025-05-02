@@ -25,8 +25,6 @@ export interface IFoodSpot {
   votesCount: number;
   reviewCount: number;
   averageRating: number;
-  isFavorite?: boolean;
   className?: string;
-  onFavoriteToggle?: () => void;
   showAdminInfo?: boolean;
 }

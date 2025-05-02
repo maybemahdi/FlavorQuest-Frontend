@@ -264,13 +264,17 @@ const NavBar = () => {
           {currentUser ? (
             <div className="lg:hidden flex flex-col gap-3 mt-5">
               <MyButton
-                onClick={() =>
+                onClick={() => {
                   router.push(
-                    `/dashboard/${(
-                      currentUser as DecodedUser
-                    )?.role.toLowerCase()}`
-                  )
-                }
+                    (currentUser as DecodedUser)?.role === "USER"
+                      ? "/user"
+                      : (currentUser as DecodedUser)?.role === "PREMIUM_USER"
+                      ? "/user"
+                      : (currentUser as DecodedUser)?.role === "ADMIN"
+                      ? "/dashboard"
+                      : ""
+                  );
+                }}
                 label="Dashboard"
                 variant="outline"
                 fullWidth

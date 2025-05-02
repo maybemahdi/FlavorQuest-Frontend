@@ -14,7 +14,7 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-[calc(100vh-200px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-md overflow-hidden p-6 space-y-4">
+      <div className="max-w-md w-full bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden p-6 space-y-4">
         <div className="flex flex-col items-center">
           {/* Profile Image */}
           <div className="relative h-32 w-32 rounded-full overflow-hidden border-4 border-gray-100">

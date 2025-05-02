@@ -30,7 +30,6 @@ export const foodSpots: IFoodSpot[] = [
     votesCount: 156,
     reviewCount: 156,
     averageRating: 4.8,
-    isFavorite: false,
   },
   {
     id: "3fa85f64-5717-4562-b3fc-2c963f66afa7",
@@ -61,7 +60,6 @@ export const foodSpots: IFoodSpot[] = [
     votesCount: 92,
     reviewCount: 92,
     averageRating: 4.6,
-    isFavorite: true,
   },
   {
     id: "3fa85f64-5717-4562-b3fc-2c963f66afa8",
@@ -92,6 +90,5 @@ export const foodSpots: IFoodSpot[] = [
     votesCount: 32,
     reviewCount: 32,
     averageRating: 4.2,
-    isFavorite: false,
   },
 ];

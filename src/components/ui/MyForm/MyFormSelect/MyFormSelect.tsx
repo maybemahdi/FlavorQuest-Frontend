@@ -14,6 +14,7 @@ interface MyFormSelectProps {
   placeHolder: string;
   className?: string;
   isSearch?: boolean;
+  defaultValue?: string;
 }
 
 const MyFormSelect = ({
@@ -22,6 +23,7 @@ const MyFormSelect = ({
   name,
   options,
   disabled,
+  defaultValue,
   mode,
   placeHolder,
   className,
@@ -56,6 +58,7 @@ const MyFormSelect = ({
               onChange={(value) => field.onChange(value)}
               options={options}
               size="large"
+              defaultValue={defaultValue}
               disabled={disabled}
               placeholder={placeHolder}
               showSearch={isSearch} // Enable search functionality based on isSearch prop
@@ -79,7 +82,14 @@ const MyFormSelect = ({
             />
 
             {/* Error Message */}
-            {error && <small className="!font-poppins text-[13px]" style={{ color: "red" }}>{error.message}</small>}
+            {error && (
+              <small
+                className="!font-poppins text-[13px]"
+                style={{ color: "red" }}
+              >
+                {error.message}
+              </small>
+            )}
           </Form.Item>
         </div>
       )}

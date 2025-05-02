@@ -6,7 +6,6 @@ import { FoodSpotCard } from "@/components/shared/FoodSpotCard/FoodSpotCard";
 import FoodSpotCardSkeleton from "@/components/shared/FoodSpotCardSkeleton/FoodSpotCardSkeleton";
 import Loading from "@/components/shared/Loading/Loading";
 import MyContainer from "@/components/shared/MyContainer/MyContainer";
-import { foodSpots } from "@/data/foodSpots";
 import { useGetAllCategoryQuery } from "@/redux/features/category/category.api";
 import { useGetAllPostQuery } from "@/redux/features/posts/posts.user.api";
 import { IFoodSpot } from "@/types";
@@ -17,7 +16,7 @@ import { useEffect, useState } from "react";
 const SpotsPage = () => {
   // State management
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(2);
+  const [pageSize, setPageSize] = useState(10);
   const [searchQuery, setSearchQuery] = useState("");
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -80,10 +79,6 @@ const SpotsPage = () => {
   });
   const { data: categoriesResponse, isLoading: isCategoryLoading } =
     useGetAllCategoryQuery(undefined);
-
-  const onFavoriteToggle = async (id: string) => {
-    console.log(id);
-  };
 
   if (isCategoryLoading) {
     return <Loading />;
@@ -169,7 +164,7 @@ const SpotsPage = () => {
               <input
                 type="range"
                 min="0"
-                max="499"
+                max="1000"
                 step="1"
                 value={priceRange[0]}
                 onChange={(e) =>
@@ -179,7 +174,7 @@ const SpotsPage = () => {
               />
               <input
                 type="range"
-                min="500"
+                min={priceRange[0]}
                 max="1000"
                 step="1"
                 value={priceRange[1]}
@@ -201,7 +196,7 @@ const SpotsPage = () => {
               <FoodSpotCard
                 key={spot?.id}
                 spot={spot}
-                onFavoriteToggle={onFavoriteToggle}
+                // onFavoriteToggle={onFavoriteToggle}
               />
             ))}
           </div>

@@ -8,7 +8,10 @@ import MyFormSelect from "@/components/ui/MyForm/MyFormSelect/MyFormSelect";
 import MyFormTextArea from "@/components/ui/MyForm/MyFormTextArea/MyFormTextArea";
 import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
 import { useGetAllCategoryQuery } from "@/redux/features/category/category.api";
-import { useUpdatePostMutation } from "@/redux/features/posts/posts.user.api";
+import {
+  useGetSinglePostQuery,
+  useUpdatePostMutation,
+} from "@/redux/features/posts/posts.user.api";
 import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UploadCloud } from "lucide-react";
@@ -49,7 +52,7 @@ const UpdatePostsSchema = z
       })
       .optional(),
     categoryId: z.string().uuid("Invalid category ID").optional(),
-    image: z.instanceof(File, { message: "Must be a valid file" }).optional(),
+    image: z.any().optional(),
   })
   .refine(
     (data) => {
@@ -70,6 +73,8 @@ const UpdatePostsPage = ({ postId }: { postId: string }) => {
   const router = useRouter();
   const { data: categoriesResponse, isLoading } =
     useGetAllCategoryQuery(undefined);
+  const { data: singlePostResponse, isLoading: isPostLoading } =
+    useGetSinglePostQuery(postId);
   const [updatePost] = useUpdatePostMutation();
 
   const handleSubmit = async (data: UpdatePostFormInputs, reset: any) => {
@@ -106,7 +111,7 @@ const UpdatePostsPage = ({ postId }: { postId: string }) => {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || isPostLoading) {
     return <Loading />;
   }
 
@@ -119,22 +124,30 @@ const UpdatePostsPage = ({ postId }: { postId: string }) => {
         onSubmit={handleSubmit}
         className="space-y-4"
       >
-        <MyFormInput name="title" placeHolder="Item title" label="Title" />
+        <MyFormInput
+          value={singlePostResponse?.data?.title}
+          name="title"
+          placeHolder="Item title"
+          label="Title"
+        />
 
         <MyFormTextArea
+          value={singlePostResponse?.data?.description}
           name="description"
           placeHolder="Item description"
           label="Description"
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 items-center gap-4">
           <MyFormInput
+            value={singlePostResponse?.data?.location}
             name="location"
             placeHolder="Location"
             label="Location"
           />
 
           <MyFormSelect
+            defaultValue={singlePostResponse?.data?.categoryId}
             name="categoryId"
             placeHolder="Category"
             label="Category"
@@ -149,12 +162,14 @@ const UpdatePostsPage = ({ postId }: { postId: string }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <MyFormInput
+            value={String(singlePostResponse?.data?.minPrice)}
             name="minPrice"
             placeHolder="Minimum price"
             label="Min Price"
           />
 
           <MyFormInput
+            value={String(singlePostResponse?.data?.maxPrice)}
             name="maxPrice"
             placeHolder="Maximum price"
             label="Max Price"
@@ -162,6 +177,7 @@ const UpdatePostsPage = ({ postId }: { postId: string }) => {
         </div>
 
         <MyFormImageUpload
+          defaultValue={singlePostResponse?.data?.image}
           name="image"
           label="Display Image"
           inputClassName="cursor-pointer"
@@ -175,6 +191,19 @@ const UpdatePostsPage = ({ postId }: { postId: string }) => {
               PNG, JPG up to 3MB
             </p>
           </div>
+          {/* {singlePostResponse?.data?.image ? (
+            <div className="object-cover mt-5">
+              <Image
+                src={singlePostResponse?.data?.image}
+                alt="image"
+                height="250"
+                width="250"
+                className="mt-5"
+              />
+            </div>
+          ) : (
+            ""
+          )} */}
         </MyFormImageUpload>
 
         <div className="flex justify-end gap-4 pt-4">

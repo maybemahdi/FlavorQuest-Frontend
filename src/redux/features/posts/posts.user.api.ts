@@ -19,9 +19,25 @@ const postUserApi = baseApi.injectEndpoints({
       },
       providesTags: ["post"],
     }),
+    getMyPosts: builder.query({
+      query: (data) => {
+        const params = new URLSearchParams();
+        if (data) {
+          data?.forEach((item: any) => {
+            params.append(item.name, item.value as string);
+          });
+        }
+        return {
+          url: `/post/user-posts`,
+          method: "GET",
+          params: params,
+        };
+      },
+      providesTags: ["post"],
+    }),
     getSinglePost: builder.query({
       query: (id) => ({
-        url: `Post/${id}`,
+        url: `/post/postById/${id}`,
         method: "GET",
       }),
       providesTags: ["post"],
@@ -39,9 +55,9 @@ const postUserApi = baseApi.injectEndpoints({
     }),
 
     updatePost: builder.mutation({
-      query: (data) => {
+      query: ({ id, data }) => {
         return {
-          url: `/post/update/${data?.id}`,
+          url: `/post/updateByUser/${id}`,
           method: "PATCH",
           body: data,
         };
@@ -51,7 +67,7 @@ const postUserApi = baseApi.injectEndpoints({
     deletePost: builder.mutation({
       query: (id) => {
         return {
-          url: `Post/${id}`,
+          url: `/post/delete/${id}`,
           method: "DELETE",
         };
       },
@@ -64,4 +80,7 @@ export const {
   useCreatePostMutation,
   useUpdatePostMutation,
   useGetAllPostQuery,
+  useGetSinglePostQuery,
+  useDeletePostMutation,
+  useGetMyPostsQuery,
 } = postUserApi;

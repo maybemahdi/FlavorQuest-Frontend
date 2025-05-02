@@ -1,4 +1,3 @@
-"use client";
 // components/FeaturedSpots.tsx
 import { foodSpots } from "@/data/foodSpots";
 import { FoodSpotCard } from "@/components/shared/FoodSpotCard/FoodSpotCard";
@@ -9,9 +8,6 @@ import Link from "next/link";
 import SectionHead from "@/components/shared/SectionHead/SectionHead";
 
 export default function FeaturedSpots() {
-  const onFavoriteToggle = async (id: string) => {
-    console.log(id);
-  };
   return (
     <section className="py-12 md:py-16 bg-slate-100/90">
       <MyContainer>
@@ -27,7 +23,7 @@ export default function FeaturedSpots() {
             <FoodSpotCard
               key={spot?.id}
               spot={spot}
-              onFavoriteToggle={onFavoriteToggle}
+              // onFavoriteToggle={onFavoriteToggle}
             />
           ))}
         </div>

@@ -10,7 +10,6 @@ import { useEffect, useRef, useState } from "react";
 import { FiLogOut } from "react-icons/fi";
 import { RxAvatar } from "react-icons/rx";
 import Swal from "sweetalert2";
-import { ThemeToggle } from "./theme-toggle";
 
 interface TopBarProps {
   onMenuClickAction: () => void;
@@ -64,7 +63,7 @@ export default function TopBar({ onMenuClickAction }: TopBarProps) {
   };
 
   return (
-    <header className="h-16 border-b border-border flex items-center px-4 gap-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="h-16 border-b border-border flex items-center px-4 gap-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-[1000]">
       {/* Mobile menu button - visible on small screens */}
       <button
         onClick={onMenuClickAction}
@@ -77,7 +76,7 @@ export default function TopBar({ onMenuClickAction }: TopBarProps) {
       <h5 className="font-semibold text-lg flex-1">Dashboard</h5>
 
       {/* Theme toggle */}
-      <ThemeToggle />
+      {/* <ThemeToggle /> */}
 
       {/* User account - smaller screens only */}
       <div ref={dropdownRef} className="relative">

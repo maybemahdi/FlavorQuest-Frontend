@@ -1,18 +1,14 @@
 // app/about/page.tsx
-"use client";
-import Image from "next/image";
-import { MapPin, Users, Star } from "lucide-react";
 import { FoodSpotCard } from "@/components/shared/FoodSpotCard/FoodSpotCard";
-import { foodSpots } from "@/data/foodSpots";
-import MyButton from "@/components/ui/MyButton/MyButton";
-import Link from "next/link";
-import SectionHead from "@/components/shared/SectionHead/SectionHead";
 import MyContainer from "@/components/shared/MyContainer/MyContainer";
+import SectionHead from "@/components/shared/SectionHead/SectionHead";
+import MyButton from "@/components/ui/MyButton/MyButton";
+import { foodSpots } from "@/data/foodSpots";
+import { MapPin, Star, Users } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 const AboutPage = () => {
-  const onFavoriteToggle = async (id: string) => {
-    console.log(id);
-  };
   return (
     <div className="bg-white">
       {/* Hero Section */}
@@ -122,15 +118,15 @@ const AboutPage = () => {
             {/* Example FoodSpotCards */}
             <FoodSpotCard
               spot={foodSpots[0]}
-              onFavoriteToggle={onFavoriteToggle}
+              // onFavoriteToggle={onFavoriteToggle}
             />
             <FoodSpotCard
               spot={foodSpots[0]}
-              onFavoriteToggle={onFavoriteToggle}
+              // onFavoriteToggle={onFavoriteToggle}
             />
             <FoodSpotCard
               spot={foodSpots[0]}
-              onFavoriteToggle={onFavoriteToggle}
+              // onFavoriteToggle={onFavoriteToggle}
             />
             {/* Add 2 more example cards */}
           </div>
