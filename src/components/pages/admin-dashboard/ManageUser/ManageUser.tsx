@@ -1,10 +1,11 @@
-"use client";
+"use client"
 import React, { useState } from "react";
-import { Table, Tag, Pagination} from "antd";
+import { Table, Tag, Pagination, Button } from "antd";
+import { BlockOutlined, DeleteOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import type { TableColumnsType, TableProps } from "antd";
 import Image from "next/image";
 import "./pagination.css";
-import MyButton from "@/components/ui/MyButton/MyButton";
+
 
 enum UserStatus {
   ACTIVE = "ACTIVE",
@@ -72,72 +73,72 @@ const ManageUser = () => {
      console.log(id,newStatus)
   };
 
- 
-
-const columns: TableColumnsType<TUser> = [
-  {
-    title: "User",
-    dataIndex: "name",
-    render: (_, user) => (
-      <div className="flex items-center gap-2">
-        <Image
-          src={user.profilePhoto}
-          alt="User"
-          width={40}
-          height={40}
-          className="w-10 h-10 rounded-full"
-        />
-        <div>
-          <div className="font-medium">{user.name}</div>
-          <div className="text-gray-500 text-sm">{user.email}</div>
+  const columns: TableColumnsType<TUser> = [
+    {
+      title: "User",
+      dataIndex: "name",
+      render: (_, user) => (
+        <div className="flex items-center gap-2">
+          <Image
+            src={user.profilePhoto}
+            alt="User"
+            width={40}
+            height={40}
+            className="w-10 h-10 rounded-full"
+          />
+          <div>
+            <div className="font-medium">{user.name}</div>
+            <div className="text-gray-500 text-sm">{user.email}</div>
+          </div>
         </div>
-      </div>
-    ),
-  },
-  {
-    title: "Role",
-    dataIndex: "role",
-  },
-  {
-    title: "Status",
-    dataIndex: "status",
-    render: (status: UserStatus) => (
-      <Tag color={getStatusColor(status)}>{status}</Tag>
-    ),
-  },
-  {
-    title: "Actions",
-    dataIndex: "actions",
-    render: (_, user) => (
-      <div className="flex gap-2 flex-wrap">
-        {user.status !== UserStatus.BLOCKED && (
-          <MyButton
-            label="Block"
-            variant="outline"
-            onClick={() => handleStatusChange(user.id, UserStatus.BLOCKED)}
-          />
-        )}
-        {user.status !== UserStatus.DELETED && (
-          <MyButton
-            label="Delete"
-            variant="filled"
-            customBg="#ff4d4f"
-            onClick={() => handleStatusChange(user.id, UserStatus.DELETED)}
-          />
-        )}
-        {user.status !== UserStatus.ACTIVE && (
-          <MyButton
-            label="Activate"
-            variant="filled"
-            onClick={() => handleStatusChange(user.id, UserStatus.ACTIVE)}
-          />
-        )}
-      </div>
-    ),
-  }
-  
-];
-
+      ),
+    },
+    {
+      title: "Role",
+      dataIndex: "role",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      render: (status: UserStatus) => (
+        <Tag color={getStatusColor(status)}>{status}</Tag>
+      ),
+    },
+    {
+      title: "Actions",
+      dataIndex: "actions",
+      render: (_, user) => (
+        <div className="flex gap-2 flex-wrap">
+          {user.status !== UserStatus.BLOCKED && (
+            <Button
+              icon={<BlockOutlined />}
+              onClick={() => handleStatusChange(user.id, UserStatus.BLOCKED)}
+              shape="circle"
+              size="large"
+            />
+          )}
+          {user.status !== UserStatus.DELETED && (
+            <Button
+              icon={<DeleteOutlined />}
+              onClick={() => handleStatusChange(user.id, UserStatus.DELETED)}
+              shape="circle"
+              size="large"
+              danger
+            />
+          )}
+          {user.status !== UserStatus.ACTIVE && (
+            <Button
+              icon={<CheckCircleOutlined />}
+              onClick={() => handleStatusChange(user.id, UserStatus.ACTIVE)}
+              shape="circle"
+              size="large"
+              type="primary"
+            />
+          )}
+        </div>
+      ),
+    },
+  ];
 
   const onChange: TableProps<TUser>["onChange"] = (
     paginationConfig,
