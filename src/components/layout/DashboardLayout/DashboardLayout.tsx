@@ -43,6 +43,7 @@ export default function DashboardLayout({
 
       {/* Mobile Drawer - visible when open on small screens */}
       <MobileDrawer
+        myData={getMeResponse?.data}
         role={role as string}
         isOpen={isMobileDrawerOpen}
         onClose={() => setIsMobileDrawerOpen(false)}

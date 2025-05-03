@@ -28,14 +28,14 @@ const commentApi = baseApi.injectEndpoints({
     }),
 
     createComment: builder.mutation({
-      query: (data) => {
+      query: ({ id, data }) => {
         return {
-          url: "/post",
+          url: `/comment/${id}`,
           method: "POST",
           body: data,
         };
       },
-      invalidatesTags: ["post"],
+      invalidatesTags: ["post", "comment"],
     }),
   }),
 });

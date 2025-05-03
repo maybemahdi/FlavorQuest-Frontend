@@ -104,7 +104,7 @@ export default function TopBar({ myData, onMenuClickAction }: TopBarProps) {
             />
           ) : (
             <div className="w-11 h-11 rounded-full bg-primary text-white flex items-center justify-center text-primary-foreground font-medium flex-shrink-0">
-              JD
+              {(myData?.name as string)?.charAt(0)?.toUpperCase()}
             </div>
           )}
         </button>

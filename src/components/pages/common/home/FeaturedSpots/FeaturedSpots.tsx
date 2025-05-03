@@ -13,7 +13,7 @@ export default function FeaturedSpots() {
       <MyContainer>
         <div className="flex justify-between items-center mb-6 md:mb-10">
           <SectionHead title="Featured Street Eats" />
-          <Link href={"/feed"} className="hidden md:block">
+          <Link href={"/spots"} className="hidden md:block">
             <MyButton label="View all" isArrow className="rounded-full" />
           </Link>
         </div>

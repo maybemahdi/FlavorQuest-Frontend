@@ -26,12 +26,14 @@ import {
 import Logo from "./logo";
 
 interface MobileDrawerProps {
+  myData: Record<string, unknown>;
   isOpen: boolean;
   onClose: () => void;
   role?: string;
 }
 
 export default function MobileDrawer({
+  myData,
   role,
   isOpen,
   onClose,
@@ -87,7 +89,7 @@ export default function MobileDrawer({
         </div>
 
         <div className="p-4 border-t border-border">
-          <MobileProfileSection />
+          <MobileProfileSection myData={myData} />
         </div>
       </div>
     </>
@@ -280,16 +282,16 @@ function NavGroup({ icon, label, children }: NavGroupProps) {
   );
 }
 
-function MobileProfileSection() {
+function MobileProfileSection({ myData }: { myData: Record<string, unknown> }) {
   return (
     <div className="flex items-center gap-3">
       <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-medium">
-        JD
+        {(myData?.name as string)?.charAt(0)?.toUpperCase()}
       </div>
       <div>
-        <div className="font-medium">John Doe</div>
+        <div className="font-medium">{myData?.name as string}</div>
         <div className="text-xs text-muted-foreground">
-          owner@streetfood.com
+          {myData?.email as string}
         </div>
       </div>
     </div>

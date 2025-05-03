@@ -2,15 +2,49 @@
 "use client";
 import Loading from "@/components/shared/Loading/Loading";
 import MyButton from "@/components/ui/MyButton/MyButton";
+import { selectCurrentToken } from "@/redux/features/auth/authSlice";
 import { useGetSinglePostQuery } from "@/redux/features/posts/posts.user.api";
+import { useAppSelector } from "@/redux/hooks";
 import { ISinglePost } from "@/types/singlePost.interface";
-import { ChevronLeft, Lock, MapPin, Star, ThumbsUp } from "lucide-react";
+import { verifyToken } from "@/utils/verifyToken";
+import { JwtPayload } from "jwt-decode";
+import { MdThumbDown, MdThumbUp } from "react-icons/md";
+import {
+  ChevronLeft,
+  Lock,
+  MapPin,
+  Star,
+  ThumbsDown,
+  ThumbsUp,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  useCreateVoteMutation,
+  useUnVoteMutation,
+} from "@/redux/features/vote/vote.user.api";
+import { toast } from "sonner";
+import { useState } from "react";
+import { CommentSection } from "./CommentSection/CommentSection";
+import MyContainer from "@/components/shared/MyContainer/MyContainer";
+
+interface DecodedUser extends JwtPayload {
+  id: string;
+}
 
 const SpotDetailsPage = ({ spotId }: { spotId: string }) => {
+  const currentUserToken = useAppSelector(selectCurrentToken);
+  const currentUser = currentUserToken ? verifyToken(currentUserToken) : null;
+  const [createVoteMutation] = useCreateVoteMutation();
+  const [unVote] = useUnVoteMutation();
+  const [isActionLoading, setIsActionLoading] = useState(false);
 
-  const { data: response, isLoading } = useGetSinglePostQuery(spotId, {
+  const {
+    data: response,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetSinglePostQuery(spotId, {
     skip: !spotId,
   });
 
@@ -30,8 +64,56 @@ const SpotDetailsPage = ({ spotId }: { spotId: string }) => {
 
   console.log(response);
 
+  const isAlreadyUpvoted =
+    spot?.votes?.some(
+      (vote) =>
+        vote?.type === "UPVOTE" &&
+        vote?.userId === (currentUser as DecodedUser)?.id
+    ) || false;
+
+  const isAlreadyDownVoted =
+    spot?.votes?.some(
+      (vote) =>
+        vote?.type === "DOWNVOTE" &&
+        vote?.userId === (currentUser as DecodedUser)?.id
+    ) || false;
+
+  const createVote = async (type: string) => {
+    setIsActionLoading(true);
+    if (!currentUser) {
+      toast.error("Please sign in to vote!");
+      setIsActionLoading(false);
+      return;
+    }
+    if (isAlreadyUpvoted && type === "UPVOTE") {
+      await unVote(spot?.id).unwrap();
+      refetch();
+      setIsActionLoading(false);
+      return;
+    }
+    if (isAlreadyDownVoted && type === "DOWNVOTE") {
+      await unVote(spot?.id).unwrap();
+      refetch();
+      setIsActionLoading(false);
+      return;
+    }
+    interface CreateVotePayload {
+      id: string;
+      data: {
+        type: string;
+      };
+    }
+    const payload: CreateVotePayload = {
+      id: spot?.id ?? "",
+      data: { type },
+    };
+    await createVoteMutation({ id: payload.id, data: payload.data }).unwrap();
+    refetch();
+    setIsActionLoading(false);
+  };
+
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <MyContainer className="py-8">
       {/* Back Button */}
       <Link
         href="/spots"
@@ -132,8 +214,30 @@ const SpotDetailsPage = ({ spotId }: { spotId: string }) => {
           {/* Action Buttons */}
           <div className="flex space-x-4 pt-4">
             <MyButton
-              label={`Like (${spot?.upvoteCount})`}
-              customIcon={<ThumbsUp className="w-5 h-5 mr-2" />}
+              onClick={() => createVote("UPVOTE")}
+              isDisabled={isFetching || isActionLoading}
+              label={`Upvote (${spot?.upvoteCount})`}
+              customIcon={
+                isAlreadyUpvoted ? (
+                  <MdThumbUp className="w-5 h-5 mr-2" />
+                ) : (
+                  <ThumbsUp className="w-5 h-5 mr-2" />
+                )
+              }
+              variant="outline"
+              className="flex items-center"
+            />
+            <MyButton
+              onClick={() => createVote("DOWNVOTE")}
+              isDisabled={isFetching || isActionLoading}
+              label={`DownVote (${spot?.downvoteCount})`}
+              customIcon={
+                isAlreadyDownVoted ? (
+                  <MdThumbDown className="w-5 h-5 mr-2" />
+                ) : (
+                  <ThumbsDown className="w-5 h-5 mr-2" />
+                )
+              }
               variant="outline"
               className="flex items-center"
             />
@@ -148,13 +252,13 @@ const SpotDetailsPage = ({ spotId }: { spotId: string }) => {
       </section> */}
 
       {/* Comments Section */}
-      {/* <section className="mt-16">
+      <section className="mt-16">
         <h2 className="text-2xl font-bold mb-6">
-          Comments ({spot.commentsCount})
+          Comments ({spot?.commentCount})
         </h2>
-        <CommentSection spotId={spot.id} />
-      </section> */}
-    </div>
+        <CommentSection comments={spot?.comments} postId={spot?.id} />
+      </section>
+    </MyContainer>
   );
 };
 
