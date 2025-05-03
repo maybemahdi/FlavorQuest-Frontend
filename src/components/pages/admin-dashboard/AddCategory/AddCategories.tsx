@@ -19,10 +19,12 @@ type TCategoryInput = z.infer<typeof categorySchema>;
 const AddCategoryForm = () => {
   const [postCategory] = usePostCategoryMutation();
 
-  const handleFormSubmit = async (data: TCategoryInput) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleFormSubmit = async (data: TCategoryInput,reset: any) => {
     try {
       await postCategory(data).unwrap();
       toast.success("Category added successfully!");
+      reset()
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       toast.error(`Failed to add category. ${data.name} already exists`);

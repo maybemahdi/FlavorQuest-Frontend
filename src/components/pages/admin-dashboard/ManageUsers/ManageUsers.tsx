@@ -20,6 +20,9 @@ import {
   CheckCircleOutlined,
 } from "@ant-design/icons";
 import Image from "next/image";
+import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
+import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
+import MyFormSelect from "@/components/ui/MyForm/MyFormSelect/MyFormSelect";
 
 type TUser = {
   id: string;
@@ -33,10 +36,14 @@ type TUser = {
 
 const ManageUsers = () => {
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
+  const [searchTerm, setSearchTerm] = useState("");
+  const [role, setRole] = useState("");
 
   const { data: userData, isFetching } = useGetAllUserQuery({
     page: pagination.current,
     limit: pagination.pageSize,
+    searchTerm,
+    role,
   });
 
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
@@ -159,6 +166,28 @@ const ManageUsers = () => {
 
   return (
     <div className="p-6">
+       <MyFormWrapper className="mb-10" onSubmit={() => {}}>
+              <div className="flex gap-5 flex-wrap">
+                <MyFormInput
+                  name="searchTerm"
+                  placeHolder="Search by name or email"
+                  onValueChange={(val) => setSearchTerm(val)}
+                />
+      
+                <MyFormSelect
+                  name="role"
+                  placeHolder="Filter by role"
+                  options={[
+                    { label: "Admin", value: "ADMIN" },
+                    { label: "User", value: "USER" },
+                    { label: "Premium_user", value: "PREMIUM_USER" },
+                  ]}
+                  isSearch
+                  onValueChange={(val) => setRole(val)}
+                  className="min-w-[220px]"
+                />
+              </div>
+            </MyFormWrapper>
       <h2 className="text-2xl font-semibold mb-4 text-gray-800">Manage Users</h2>
       <Table
         columns={columns}

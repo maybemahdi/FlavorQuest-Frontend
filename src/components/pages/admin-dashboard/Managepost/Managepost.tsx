@@ -15,10 +15,10 @@ import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   DeleteOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
 import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
-import MyFormSelect from "@/components/ui/MyForm/MyFormSelect/MyFormSelect";
 import MyButton from "@/components/ui/MyButton/MyButton";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -27,6 +27,7 @@ import {
   useGetAllPostsQuery,
   useUpdatePostsMutation,
 } from "@/redux/features/admin/admin.api";
+import { useRouter } from "next/navigation";
 
 type TPost = {
   id: string;
@@ -55,22 +56,20 @@ const postSchema = z.object({
 const ManagePost = () => {
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [actionStatus, setActionStatus] = useState<"APPROVED" | "REJECTED" | null>(null);
+  const [actionStatus, setActionStatus] = useState<
+    "APPROVED" | "REJECTED" | null
+  >(null);
   const [selectedPost, setSelectedPost] = useState<TPost | null>(null);
   const [updated] = useUpdatePostsMutation();
   const [deleteUser] = useDeletePostMutation();
-
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const [role, setRole] = useState("");
 
   const { data: postsData, isFetching } = useGetAllPostsQuery({
     page: pagination.current,
     limit: pagination.pageSize,
     searchTerm,
-    role,
   });
-
-  
 
   const handleOpenModal = (status: "APPROVED" | "REJECTED", post: TPost) => {
     setActionStatus(status);
@@ -78,17 +77,15 @@ const ManagePost = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async(postId: string) => {
-    
-        try {
-          await deleteUser(postId).unwrap();
-          toast.success("Post deleted successfully!");
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (error) {
-          toast.error("Failed to delete post.");
-          console.log(error)
-        }  
-    
+  const handleDelete = async (postId: string) => {
+    try {
+      await deleteUser(postId).unwrap();
+      toast.success("Post deleted successfully!");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      toast.error("Failed to delete post.");
+      console.log(error);
+    }
   };
 
   const handleFormSubmit = async (
@@ -108,7 +105,7 @@ const ManagePost = () => {
         }).unwrap();
 
         toast.success("Post updated successfully!");
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         toast.error("Post not updated!");
       }
@@ -209,6 +206,11 @@ const ManagePost = () => {
               }`}
               style={{ pointerEvents: isPending ? "auto" : "none" }}
             />
+            <EditOutlined
+              onClick={() => router.push(`/dashboard/update-post/${record.id}`)}
+              className="text-xl text-blue-600 hover:text-blue-800 cursor-pointer"
+            />
+
             <DeleteOutlined
               onClick={() => handleDelete(record.id)}
               className="text-xl text-red-600 hover:text-red-800 cursor-pointer"
@@ -219,7 +221,12 @@ const ManagePost = () => {
     },
   ];
 
-  const onChange: TableProps<TPost>["onChange"] = (paginationConfig, _filters, _sorter, extra) => {
+  const onChange: TableProps<TPost>["onChange"] = (
+    paginationConfig,
+    _filters,
+    _sorter,
+    extra
+  ) => {
     if (extra.action === "paginate") {
       setPagination({
         current: paginationConfig.current!,
@@ -237,22 +244,11 @@ const ManagePost = () => {
             placeHolder="Search by title"
             onValueChange={(val) => setSearchTerm(val)}
           />
-
-          <MyFormSelect
-            name="role"
-            placeHolder="Filter by role"
-            options={[
-              { label: "ADMIN", value: "ADMIN" },
-              { label: "USER", value: "USER" },
-              { label: "PREMIUM_USER", value: "PREMIUM_USER" },
-            ]}
-            isSearch
-            onValueChange={(val) => setRole(val)}
-            className="min-w-[220px]"
-          />
         </div>
       </MyFormWrapper>
-      <h2 className="text-2xl font-semibold mb-4 mt-4 text-gray-800">All posts</h2>
+      <h2 className="text-2xl font-semibold mb-4 mt-4 text-gray-800">
+        All posts
+      </h2>
       <div className="overflow-x-auto">
         <Table
           columns={columns}
