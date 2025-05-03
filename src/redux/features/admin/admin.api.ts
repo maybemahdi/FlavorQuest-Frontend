@@ -109,6 +109,20 @@ const adminApi = baseApi.injectEndpoints({
       invalidatesTags: ["admin"],
     }),
 
+    // get all comments
+
+
+    getAllComments: builder.query({
+      query: () => ({
+        url: "/comment",
+        method: "GET",
+      }),
+      transformResponse: (response: any) => ({
+        data: response.data,
+      }),
+      
+    }),
+
   }),
 });
 
@@ -117,4 +131,5 @@ export const {
   useUpdatePostsMutation,
   useGetAllUserQuery,
   useDeleteUserMutation, 
+  useGetAllCommentsQuery
 } = adminApi;
