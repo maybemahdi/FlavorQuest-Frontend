@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
 import MyButton from "@/components/ui/MyButton/MyButton";
 import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
-import { usePostCategoryMutation } from "@/redux/features/admin/admin.api"; 
+import { usePostCategoryMutation } from "@/redux/features/admin/admin.api";
 
 const categorySchema = z.object({
   name: z.string().min(1, "Category name is required"),
@@ -17,28 +17,21 @@ const categorySchema = z.object({
 type TCategoryInput = z.infer<typeof categorySchema>;
 
 const AddCategoryForm = () => {
-  const [postCategory] = usePostCategoryMutation(); 
+  const [postCategory] = usePostCategoryMutation();
 
   const handleFormSubmit = async (data: TCategoryInput) => {
-    console.log(data)
     try {
-       await postCategory(data).unwrap(); 
+      await postCategory(data).unwrap();
       toast.success("Category added successfully!");
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      toast.error(`Failed to add category.${data.name} already exists`);
+      toast.error(`Failed to add category. ${data.name} already exists`);
     }
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center bg-cover bg-center px-4"
-      style={{
-        backgroundImage:
-          "url('https://i.postimg.cc/BQ6kF4Nc/vecteezy-glowing-smooth-gradient-website-template-banner-header-or-11550522.jpg')",
-      }}
-    >
-      <div className="bg-white bg-opacity-90 p-6 rounded-xl shadow-lg w-full max-w-md">
+    <div className="lg:mt-32 md:mt-20 mt-10 flex items-center justify-center px-4">
+      <div className="bg-white border border-green-500 p-6 rounded-xl shadow-2xl w-full max-w-md">
         <h2 className="text-2xl font-semibold mb-4 text-center">Add Category</h2>
         <MyFormWrapper
           resolver={zodResolver(categorySchema)}
@@ -50,7 +43,7 @@ const AddCategoryForm = () => {
             placeHolder="Enter category name"
             type="text"
           />
-          <MyButton type="submit" label="Submit" fullWidth/>
+          <MyButton type="submit" label="Submit" fullWidth />
         </MyFormWrapper>
       </div>
     </div>

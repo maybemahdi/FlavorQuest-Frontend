@@ -104,7 +104,9 @@ export const baseApi = createApi({
     "comment",
     "rating",
     "vote",
-    "admin"
+    "admin",
+    "posts",
+    "categories",
   ],
   endpoints: () => ({}),
 });

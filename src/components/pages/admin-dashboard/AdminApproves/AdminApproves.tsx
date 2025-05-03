@@ -1,23 +1,17 @@
 "use client";
 import React, { useState } from "react";
-import {
-  Table,
-  Tag,
-  TableColumnsType,
-  Pagination,
-  Popconfirm,
-} from "antd";
+import { Table, Tag, TableColumnsType, Pagination, Popconfirm } from "antd";
 import type { TableProps } from "antd";
 import "./pagination.css";
 import Image from "next/image";
-import { CheckCircleOutlined } from "@ant-design/icons";
 import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
 import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
 import { toast } from "sonner";
 import {
-  useGetAllPostsQuery,
+  useGetAdminPostsQuery,
   useUpdatePostsMutation,
 } from "@/redux/features/admin/admin.api";
+import MyButton from "@/components/ui/MyButton/MyButton";
 
 type TPost = {
   id: string;
@@ -44,25 +38,23 @@ const AdminApproves = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [updated] = useUpdatePostsMutation();
 
-  const { data: postsData, isFetching} = useGetAllPostsQuery({
+  const { data: postsData, isFetching } = useGetAdminPostsQuery({
     page: pagination.current,
     limit: pagination.pageSize,
     searchTerm,
-    status:"APPROVED"
+    status: "APPROVED",
   });
 
-  
-
   const handleApprove = async (post: TPost) => {
-     if(post.id){
-       await updated({
+    if (post.id) {
+      await updated({
         data: {
-          "isPremium": true
+          isPremium: true,
         },
         order_id: post.id,
-       })
-       toast.success("Post Approved successfully!");
-     }
+      });
+      toast.success("Post Premium successfully!");
+    }
   };
 
   const columns: TableColumnsType<TPost> = [
@@ -134,8 +126,7 @@ const AdminApproves = () => {
     {
       title: "Action",
       render: (_: unknown, record: TPost) => {
-        const canApprove =
-          record.status === "APPROVED" && !record.isPremium;
+        const canApprove = record.status === "APPROVED" && !record.isPremium;
 
         return (
           <Popconfirm
@@ -145,12 +136,13 @@ const AdminApproves = () => {
             cancelText="No"
             disabled={!canApprove}
           >
-            <CheckCircleOutlined
-              className={`text-xl ${
-                canApprove
-                  ? "text-green-600 hover:text-green-800 cursor-pointer"
-                  : "text-gray-400 cursor-not-allowed"
-              }`}
+            <MyButton
+              label="Approve"
+              onClick={canApprove ? () => handleApprove(record) : undefined}
+              isDisabled={!canApprove}
+              variant="filled"
+              customBg="rgb(34 197 94)"
+              className="px-4 py-2 text-sm"
             />
           </Popconfirm>
         );
@@ -183,7 +175,9 @@ const AdminApproves = () => {
           />
         </div>
       </MyFormWrapper>
-
+      <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+        Make premium post
+      </h2>
       <div className="overflow-x-auto">
         <Table
           columns={columns}
