@@ -9,6 +9,7 @@ import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   DeleteOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
 import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
@@ -20,7 +21,7 @@ import {
   useGetAllPostsQuery,
   useUpdatePostsMutation,
 } from "@/redux/features/admin/admin.api";
-
+import { useRouter } from "next/navigation";
 type TPost = {
   id: string;
   title: string;
@@ -54,7 +55,7 @@ const Myposts = () => {
   const [selectedPost, setSelectedPost] = useState<TPost | null>(null);
   const [updated] = useUpdatePostsMutation();
   const [searchTerm, setSearchTerm] = useState("");
-
+  const router = useRouter();
   const { data: postsData, isFetching } = useGetAllPostsQuery({
     page: pagination.current,
     limit: pagination.pageSize,
@@ -189,6 +190,10 @@ const Myposts = () => {
               }`}
               style={{ pointerEvents: isPending ? "auto" : "none" }}
             />
+            <EditOutlined
+              onClick={() => router.push(`/dashboard/update-post/${record.id}`)}
+              className="text-xl text-blue-600 hover:text-blue-800 cursor-pointer"
+            />
             <DeleteOutlined
               onClick={() => handleDelete(record.id)}
               className="text-xl text-red-600 hover:text-red-800 cursor-pointer"
@@ -215,7 +220,6 @@ const Myposts = () => {
 
   return (
     <div className="px-5 mt-6">
-      
       <MyFormWrapper className="mb-10" onSubmit={() => {}}>
         <div className="flex gap-5 flex-wrap">
           <MyFormInput

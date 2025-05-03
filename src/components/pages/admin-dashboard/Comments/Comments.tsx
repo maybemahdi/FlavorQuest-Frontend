@@ -86,7 +86,6 @@ const Comments = () => {
           <DeleteOutlined
             className="text-red-500 cursor-pointer hover:text-red-700"
             style={{ fontSize: "18px" }}
-            spin={isDeleting}
           />
         </Popconfirm>
       ),
