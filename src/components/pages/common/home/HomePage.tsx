@@ -1,18 +1,18 @@
-import React from "react";
-import FeaturedSpots from "./FeaturedSpots/FeaturedSpots";
+import { AboutUs } from "./AboutUs/AboutUs";
 import Banner from "./Banner/Banner";
+import FeaturedSpots from "./FeaturedSpots/FeaturedSpots";
 import FoodCategories from "./FoodCategories/FoodCategories";
 import PremiumBenefits from "./PremiumBenefits/PremiumBenefits";
-import TopRated from "./TopRated/TopRated";
 
 const HomePage = () => {
   return (
     <div>
       <Banner />
+      <AboutUs />
       <FeaturedSpots />
-      <FoodCategories />
       <PremiumBenefits />
-      <TopRated />
+      <FoodCategories />
+      {/* <TopRated /> */}
     </div>
   );
 };

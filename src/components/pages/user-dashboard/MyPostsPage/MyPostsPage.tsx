@@ -4,7 +4,7 @@
 import Loading from "@/components/shared/Loading/Loading";
 import SectionHead from "@/components/shared/SectionHead/SectionHead";
 import MyButton from "@/components/ui/MyButton/MyButton";
-import { useGetAllCategoryQuery } from "@/redux/features/category/category.api";
+import { useGetAllCategoriesQuery } from "@/redux/features/category/category.api";
 import {
   useDeletePostForUserMutation,
   useGetMyPostsQuery
@@ -84,7 +84,7 @@ const MyPostsPage = () => {
     refetchOnMountOrArgChange: true,
   });
   const { data: categoriesResponse, isLoading: isCategoryLoading } =
-    useGetAllCategoryQuery(undefined);
+    useGetAllCategoriesQuery(undefined);
 
   const handleEdit = (postId: string) => {
     router.push(`/user/update-post/${postId}`);

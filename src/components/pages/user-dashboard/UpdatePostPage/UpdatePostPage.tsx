@@ -7,11 +7,13 @@ import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
 import MyFormSelect from "@/components/ui/MyForm/MyFormSelect/MyFormSelect";
 import MyFormTextArea from "@/components/ui/MyForm/MyFormTextArea/MyFormTextArea";
 import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
-import { useGetAllCategoryQuery } from "@/redux/features/category/category.api";
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { useGetAllCategoriesQuery } from "@/redux/features/category/category.api";
 import {
   useGetSinglePostQuery,
   useUpdatePostMutation,
 } from "@/redux/features/posts/posts.user.api";
+import { useAppSelector } from "@/redux/hooks";
 import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UploadCloud } from "lucide-react";
@@ -70,9 +72,10 @@ const UpdatePostsSchema = z
 type UpdatePostFormInputs = z.infer<typeof UpdatePostsSchema>;
 
 const UpdatePostsPage = ({ postId }: { postId: string }) => {
+  const currentUser = useAppSelector(selectCurrentUser);
   const router = useRouter();
   const { data: categoriesResponse, isLoading } =
-    useGetAllCategoryQuery(undefined);
+    useGetAllCategoriesQuery(undefined);
   const { data: singlePostResponse, isLoading: isPostLoading } =
     useGetSinglePostQuery(postId);
   const [updatePost] = useUpdatePostMutation();
@@ -106,7 +109,11 @@ const UpdatePostsPage = ({ postId }: { postId: string }) => {
 
     if (result?.data?.success) {
       toast.success(result.data.message);
-      router.push("/user/my-posts");
+      if (currentUser?.role === "ADMIN") {
+        router.push("/dashboard/my-posts");
+      } else {
+        router.push("/user/my-posts");
+      }
       reset();
     }
   };

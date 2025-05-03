@@ -7,8 +7,10 @@ import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
 import MyFormSelect from "@/components/ui/MyForm/MyFormSelect/MyFormSelect";
 import MyFormTextArea from "@/components/ui/MyForm/MyFormTextArea/MyFormTextArea";
 import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
-import { useGetAllCategoryQuery } from "@/redux/features/category/category.api";
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { useGetAllCategoriesQuery } from "@/redux/features/category/category.api";
 import { useCreatePostMutation } from "@/redux/features/posts/posts.user.api";
+import { useAppSelector } from "@/redux/hooks";
 import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UploadCloud } from "lucide-react";
@@ -60,9 +62,10 @@ const CreatePostsSchema = z
 type CreatePostFormInputs = z.infer<typeof CreatePostsSchema>;
 
 const CreatePostsPage = () => {
+  const currentUser = useAppSelector(selectCurrentUser);
   const router = useRouter();
   const { data: categoriesResponse, isLoading } =
-    useGetAllCategoryQuery(undefined);
+    useGetAllCategoriesQuery(undefined);
   const [createPost] = useCreatePostMutation();
 
   const handleSubmit = async (data: CreatePostFormInputs, reset: any) => {
@@ -89,7 +92,12 @@ const CreatePostsPage = () => {
 
     if (result?.data?.success) {
       toast.success(result.data.message);
-      router.push("/user/my-posts");
+      if (currentUser?.role === "ADMIN"){
+         router.push("/dashboard/my-posts");
+      } else{
+        router.push("/user/my-posts");
+      }
+        
       reset();
     }
   };

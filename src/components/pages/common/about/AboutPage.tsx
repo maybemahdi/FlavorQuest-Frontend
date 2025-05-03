@@ -1,14 +1,27 @@
 // app/about/page.tsx
+"use client";
 import { FoodSpotCard } from "@/components/shared/FoodSpotCard/FoodSpotCard";
+import FoodSpotCardSkeleton from "@/components/shared/FoodSpotCardSkeleton/FoodSpotCardSkeleton";
 import MyContainer from "@/components/shared/MyContainer/MyContainer";
 import SectionHead from "@/components/shared/SectionHead/SectionHead";
 import MyButton from "@/components/ui/MyButton/MyButton";
-import { foodSpots } from "@/data/foodSpots";
+import { useGetAllPostQuery } from "@/redux/features/posts/posts.user.api";
+import { IPost } from "@/types/post.interface";
+import { Empty } from "antd";
 import { MapPin, Star, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 const AboutPage = () => {
+  const { data, isLoading, isFetching } = useGetAllPostQuery(
+    [
+      { name: "page", value: 1 },
+      { name: "limit", value: 4 },
+    ],
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
   return (
     <div className="bg-white">
       {/* Hero Section */}
@@ -77,7 +90,10 @@ const AboutPage = () => {
       {/* How It Works */}
       <section className="py-6 md:py-12 bg-slate-100/90">
         <MyContainer>
-          <SectionHead title="How FlavorQuest Works" className="mb-8 md:mb-10" />
+          <SectionHead
+            title="How FlavorQuest Works"
+            className="mb-8 md:mb-10"
+          />
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-xl shadow-sm text-center">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -111,25 +127,47 @@ const AboutPage = () => {
       </section>
 
       {/* Featured Spots (Example) */}
-      <section className="py-6 md:py-12">
+      <section className="py-12 md:py-16 bg-slate-100/90">
         <MyContainer>
-        <SectionHead title="Recently Added Gems" className="mb-8 md:mb-10" />
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Example FoodSpotCards */}
-            <FoodSpotCard
-              spot={foodSpots[0]}
-              // onFavoriteToggle={onFavoriteToggle}
-            />
-            <FoodSpotCard
-              spot={foodSpots[0]}
-              // onFavoriteToggle={onFavoriteToggle}
-            />
-            <FoodSpotCard
-              spot={foodSpots[0]}
-              // onFavoriteToggle={onFavoriteToggle}
-            />
-            {/* Add 2 more example cards */}
+          <div className="flex justify-between items-center mb-6 md:mb-10">
+            <SectionHead title="Recently Added Gems" />
+            <Link href={"/spots"} className="hidden md:block">
+              <MyButton label="View all" isArrow className="rounded-full" />
+            </Link>
           </div>
+
+          {!isLoading && !isFetching && data?.data?.data?.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {data?.data?.data?.map((spot: IPost) => (
+                <FoodSpotCard
+                  key={spot?.id}
+                  spot={spot}
+                  // onFavoriteToggle={onFavoriteToggle}
+                />
+              ))}
+            </div>
+          ) : (
+            ""
+          )}
+          {isLoading || isFetching ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <FoodSpotCardSkeleton key={index} />
+              ))}
+            </div>
+          ) : (
+            ""
+          )}
+          {!isLoading && !isFetching && data?.data?.data?.length < 1 ? (
+            <div className="text-center py-12">
+              <Empty description={false} />
+              <h3 className="text-lg font-medium text-gray-900">
+                No feature spots yet
+              </h3>
+            </div>
+          ) : (
+            ""
+          )}
         </MyContainer>
       </section>
 

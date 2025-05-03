@@ -3,7 +3,7 @@ import { baseApi } from "../../api/baseApi";
 
 const categoryApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getAllCategory: builder.query({
+    getAllCategories: builder.query({
       query: (data) => {
         const params = new URLSearchParams();
         if (data?.queryObj) {
@@ -60,5 +60,5 @@ const categoryApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAllCategoryQuery, useCreateCategoryMutation } =
+export const { useGetAllCategoriesQuery, useCreateCategoryMutation } =
   categoryApi;

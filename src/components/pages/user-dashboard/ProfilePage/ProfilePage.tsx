@@ -18,15 +18,21 @@ const ProfilePage = () => {
       <div className="max-w-md w-full bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden p-6 space-y-4">
         <div className="flex flex-col items-center">
           {/* Profile Image */}
-          <div className="relative h-32 w-32 rounded-full overflow-hidden border-4 border-gray-100">
-            <Image
-              src={getMyProfileResponse?.data?.profilePhoto}
-              alt="Profile"
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
+          {getMyProfileResponse?.data?.profilePhoto ? (
+            <div className="relative h-32 w-32 rounded-full overflow-hidden border-4 border-gray-100">
+              <Image
+                src={getMyProfileResponse?.data?.profilePhoto}
+                alt="Profile"
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+          ) : (
+            <div className="w-32 h-32 rounded-full bg-primary text-xl text-white flex items-center justify-center text-primary-foreground font-medium flex-shrink-0">
+              {(getMyProfileResponse?.data?.name as string)?.charAt(0)?.toUpperCase()}
+            </div>
+          )}
 
           {/* Name */}
           <h2 className="mt-4 text-2xl font-bold text-gray-900">

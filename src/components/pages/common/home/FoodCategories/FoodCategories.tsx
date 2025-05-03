@@ -22,7 +22,7 @@ export default function FoodCategories() {
           {categories.map((category) => (
             <Link
               key={category.name}
-              href={`/spots?${category.name.toLowerCase()}`}
+              href={`/spots?category=${category.name}`}
               className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow text-center group"
             >
               <span className="text-3xl mb-2 block group-hover:scale-110 transition-transform">

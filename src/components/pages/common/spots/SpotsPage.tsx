@@ -6,20 +6,25 @@ import { FoodSpotCard } from "@/components/shared/FoodSpotCard/FoodSpotCard";
 import FoodSpotCardSkeleton from "@/components/shared/FoodSpotCardSkeleton/FoodSpotCardSkeleton";
 import Loading from "@/components/shared/Loading/Loading";
 import MyContainer from "@/components/shared/MyContainer/MyContainer";
-import { useGetAllCategoryQuery } from "@/redux/features/category/category.api";
+import { useGetAllCategoriesQuery } from "@/redux/features/category/category.api";
 import { useGetAllPostQuery } from "@/redux/features/posts/posts.user.api";
 import { IPost } from "@/types/post.interface";
 import { Empty, Pagination } from "antd";
 import { ChevronDown, Search } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const SpotsPage = () => {
   // State management
+  const searchParams = useSearchParams();
+  const categoryFromParams = searchParams.get("category");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [searchQuery, setSearchQuery] = useState("");
   const [priceRange, setPriceRange] = useState([0, 1000]);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(
+    categoryFromParams ?? ""
+  );
   const [sortBy, setSortBy] = useState("");
   const [objectQuery, setObjectQuery] = useState<
     { name: string; value: string | number }[]
@@ -30,6 +35,7 @@ const SpotsPage = () => {
     setObjectQuery([
       { name: "page", value: page },
       { name: "limit", value: pageSize },
+      { name: "category", value: selectedCategory },
     ]);
   }, []);
 
@@ -78,7 +84,7 @@ const SpotsPage = () => {
     refetchOnMountOrArgChange: true,
   });
   const { data: categoriesResponse, isLoading: isCategoryLoading } =
-    useGetAllCategoryQuery(undefined);
+    useGetAllCategoriesQuery(undefined);
 
   if (isCategoryLoading) {
     return <Loading />;
