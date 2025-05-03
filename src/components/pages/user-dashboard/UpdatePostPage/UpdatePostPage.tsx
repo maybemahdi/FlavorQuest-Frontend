@@ -110,7 +110,7 @@ const UpdatePostsPage = ({ postId }: { postId: string }) => {
     if (result?.data?.success) {
       toast.success(result.data.message);
       if (currentUser?.role === "ADMIN") {
-        router.push("/dashboard/my-posts");
+        router.push("/dashboard/my-post");
       } else {
         router.push("/user/my-posts");
       }

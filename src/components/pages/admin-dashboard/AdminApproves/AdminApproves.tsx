@@ -137,7 +137,7 @@ const AdminApproves = () => {
             disabled={!canApprove}
           >
             <MyButton
-              label="mark as approved"
+              label="Mark as Premium"
               onClick={canApprove ? () => handleApprove(record) : undefined}
               isDisabled={!canApprove}
               variant="filled"

@@ -8,6 +8,7 @@ import {
   useDeleteCommentMutation,
 } from "@/redux/features/admin/admin.api";
 import { toast } from "sonner";
+import SectionHead from "@/components/shared/SectionHead/SectionHead";
 
 type TComment = {
   id: string;
@@ -108,6 +109,7 @@ const Comments = () => {
 
   return (
     <div className="px-5 mt-6">
+      <SectionHead title="All Comments" className="text-start mb-5 !text-xl md:!text-2xl" />
       <div className="overflow-x-auto">
         <Table
           columns={columns}
