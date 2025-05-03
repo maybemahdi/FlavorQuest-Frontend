@@ -53,7 +53,7 @@ const AdminApproves = () => {
         },
         order_id: post.id,
       });
-      toast.success("Post Approved successfully!");
+      toast.success("Post Premium successfully!");
     }
   };
 

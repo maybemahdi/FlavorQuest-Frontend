@@ -170,11 +170,20 @@ const adminApi = baseApi.injectEndpoints({
         url: "/comment",
         method: "GET",
       }),
+      providesTags: ["comment"],
       transformResponse: (response: any) => ({
         data: response.data,
       }),
+      
     }),
 
+    deleteComment: builder.mutation({
+      query: (userId: string) => ({
+        url: `/comment/delete/${userId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["comment"],
+    }),
 
     getAllRatings: builder.query({
       query: () => ({
@@ -222,6 +231,7 @@ export const {
   useGetAllUserQuery,
   useDeleteUserMutation,
   useGetAllCommentsQuery,
+  useDeleteCommentMutation,
   useGetAllRatingsQuery,
   useGetAllCategoryQuery,
   usePostCategoryMutation  
