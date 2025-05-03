@@ -62,9 +62,9 @@ function Nav({ role }: { role: string }) {
           />
           <NavGroup icon={<MapPinned size={20} />} label="Manage Food Spots">
             <NavItem
-              href="/dashboard/managepost"
+              href="/dashboard/manage-post"
               label="All Posts"
-              isActive={pathname === "/dashboard/managepost"}
+              isActive={pathname === "/dashboard/manage-post"}
               isNested
             />
             <NavItem
@@ -81,7 +81,7 @@ function Nav({ role }: { role: string }) {
             />
             <NavItem
               href="/dashboard/admin-approve"
-              label="Approve Post"
+              label="Make premium Posts"
               isActive={pathname === "/dashboard/admin-approve"}
               isNested
             />
@@ -110,12 +110,12 @@ function Nav({ role }: { role: string }) {
               isActive={pathname === "/dashboard/all-comments"}
               isNested
             />
-            <NavItem
+            {/* <NavItem
               href="/dashboard/all-ratings"
               label="All Ratings"
               isActive={pathname === "/dashboard/all-ratings"}
               isNested
-            />
+            /> */}
           </NavGroup>
           <NavItem
             href="/dashboard/profile"

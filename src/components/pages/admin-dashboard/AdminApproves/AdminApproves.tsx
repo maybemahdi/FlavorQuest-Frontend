@@ -15,7 +15,7 @@ import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
 import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
 import { toast } from "sonner";
 import {
-  useGetAllPostsQuery,
+  useGetAdminPostsQuery,
   useUpdatePostsMutation,
 } from "@/redux/features/admin/admin.api";
 
@@ -44,7 +44,7 @@ const AdminApproves = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [updated] = useUpdatePostsMutation();
 
-  const { data: postsData, isFetching} = useGetAllPostsQuery({
+  const { data: postsData, isFetching} = useGetAdminPostsQuery({
     page: pagination.current,
     limit: pagination.pageSize,
     searchTerm,

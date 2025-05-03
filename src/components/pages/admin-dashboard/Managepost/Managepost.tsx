@@ -70,6 +70,8 @@ const ManagePost = () => {
     role,
   });
 
+  
+
   const handleOpenModal = (status: "APPROVED" | "REJECTED", post: TPost) => {
     setActionStatus(status);
     setSelectedPost(post);

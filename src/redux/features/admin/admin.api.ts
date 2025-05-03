@@ -33,6 +33,45 @@ const adminApi = baseApi.injectEndpoints({
         }
 
         return {
+          url: "/post/admin-posts",
+          method: "GET",
+          params: queryParams,
+        };
+      },
+      transformResponse: (response: any) => ({
+        data: response.data?.data,
+        meta: response.data?.meta,
+      }),
+      providesTags: ["posts"],
+    }),
+    // get admin Post
+    getAdminPosts: builder.query({
+      query: (params) => {
+        const queryParams: Record<string, string> = {};
+
+        if (params) {
+          if (params.searchTerm?.trim()) {
+            queryParams.searchTerm = params.searchTerm.trim();
+          }
+
+          if (params.role?.trim()) {
+            queryParams.role = params.role;
+          }
+
+          if (params.page) {
+            queryParams.page = params.page.toString();
+          }
+
+          if (params.limit) {
+            queryParams.limit = params.limit.toString();
+          }
+
+          if (params.status) {
+            queryParams.status = params.status.toString();
+          }
+        }
+
+        return {
           url: "/post",
           method: "GET",
           params: queryParams,
@@ -42,7 +81,7 @@ const adminApi = baseApi.injectEndpoints({
         data: response.data?.data,
         meta: response.data?.meta,
       }),
-      providesTags: ["admin"],
+      providesTags: ["posts"],
     }),
 
     // Update posts
@@ -168,6 +207,7 @@ const adminApi = baseApi.injectEndpoints({
 
 export const {
   useGetAllPostsQuery,
+  useGetAdminPostsQuery,
   useUpdatePostsMutation,
   useDeletePostMutation,
   useGetAllUserQuery,
