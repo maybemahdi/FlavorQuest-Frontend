@@ -10,11 +10,13 @@ interface MyFormSelectProps {
   name: string;
   options?: SelectProps["options"];
   disabled?: boolean;
-  mode?: "multiple" | "tags"; // these are the two modes supported by Ant Design's Select
+  mode?: "multiple" | "tags";
   placeHolder: string;
   className?: string;
   isSearch?: boolean;
   defaultValue?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onValueChange?: (val: any) => void;
 }
 
 const MyFormSelect = ({
@@ -28,6 +30,7 @@ const MyFormSelect = ({
   placeHolder,
   className,
   isSearch = false,
+  onValueChange,
 }: MyFormSelectProps) => {
   return (
     <Controller
@@ -55,13 +58,16 @@ const MyFormSelect = ({
               {...field}
               ref={null}
               value={field.value}
-              onChange={(value) => field.onChange(value)}
+              onChange={(value) => {
+                field.onChange(value);
+                onValueChange?.(value);
+              }}
               options={options}
               size="large"
               defaultValue={defaultValue}
               disabled={disabled}
               placeholder={placeHolder}
-              showSearch={isSearch} // Enable search functionality based on isSearch prop
+              showSearch={isSearch}
               filterOption={
                 isSearch
                   ? (input, option) =>
@@ -71,14 +77,6 @@ const MyFormSelect = ({
                         .includes(input.toLowerCase())
                   : undefined
               }
-              // filterSort={
-              //   isSearch
-              //     ? (optionA, optionB) =>
-              //         (String(optionA?.label ?? "").toLowerCase()).localeCompare(
-              //           String(optionB?.label ?? "").toLowerCase()
-              //         )
-              //     : undefined
-              // }
             />
 
             {/* Error Message */}

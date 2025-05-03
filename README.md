@@ -1,37 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌮 Street Food Finder & Review Website - Frontend
 
-## Getting Started
+A feature-rich, responsive web application where users can discover, review, and post street food spots. Built with **Next.js** and **Tailwind CSS**, the frontend interacts with a RESTful backend API to provide a seamless user experience.
 
-First, run the development server:
+## 🚀 Live Demo
+
+Frontend: [https://your-frontend-url.com](https://your-frontend-url.com)  
+Backend API: [https://your-backend-url.com](https://your-backend-url.com)
+
+---
+
+## 🧠 Project Features (Frontend)
+
+### ✅ General
+- Fully responsive design (mobile-first)
+- Clean and intuitive UI using Tailwind CSS
+- Navigation with authentication-aware layout
+
+### 👤 User Functionality
+- Register and login using email and password
+- Post new food discoveries with:
+  - Title
+  - Description
+  - Location
+  - Price range
+  - Image upload
+  - Category selection
+- View, search, and filter food spots
+- Upvote/downvote and rate food spots
+- Comment on food spots
+- View profile and manage posted content
+
+### 💎 Premium User Features
+- Subscribe via payment gateway (SSLCommerz/ShurjoPay)
+- Access exclusive “Premium” food posts
+
+### 🔐 Admin Functionality
+- Admin login and dashboard access
+- Approve or reject user-submitted food posts
+- Mark posts as premium content
+- Moderate user comments
+
+---
+
+## ⚙️ Tech Stack
+
+- Next.js
+
+- Redux
+
+- TypeScript
+
+- Ant Design
+
+- Lottie React
+
+
+## 🛠️ Getting Started (Setup Locally)
+
+### 1. Clone the Repository
 
 ```bash
+git clone https://github.com/maybemahdi/FlavorQuest-Frontend.git
+cd FlavorQuest-Frontend
+
+npm install
+# or
+yarn install
+
+## Create env file at root folder
+
+- NEXT_PUBLIC_BASE_URL="https://your-backend-url.com/api"
+- NEXT_PUBLIC_GOOGLE_ID="your-google-client-id"
+- NEXT_PUBLIC_GOOGLE_SECRET="your-google-client-secret"
+- NEXT_PUBLIC_NEXT_AUTH_SECRET="your-random-auth-secret"
+
+## Run the server
+
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# team-404-frontend
