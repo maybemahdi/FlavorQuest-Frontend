@@ -60,6 +60,14 @@ const adminApi = baseApi.injectEndpoints({
       invalidatesTags: ["admin"],
     }),
 
+    deletePost: builder.mutation({
+      query: (userId: string) => ({
+        url: `/post/delete/${userId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["admin"],
+    }),
+
     // Get all users
     getAllUser: builder.query({
       query: (params) => {
@@ -100,7 +108,7 @@ const adminApi = baseApi.injectEndpoints({
       providesTags: ["admin"],
     }),
 
-    
+    // Delete user
     deleteUser: builder.mutation({
       query: (userId: string) => ({
         url: `/users/delete/${userId}`,
@@ -109,9 +117,7 @@ const adminApi = baseApi.injectEndpoints({
       invalidatesTags: ["admin"],
     }),
 
-    // get all comments
-
-
+    // Get all comments
     getAllComments: builder.query({
       query: () => ({
         url: "/comment",
@@ -120,16 +126,27 @@ const adminApi = baseApi.injectEndpoints({
       transformResponse: (response: any) => ({
         data: response.data,
       }),
-      
     }),
 
+
+    getAllRatings: builder.query({
+      query: () => ({
+        url: "/post/admin-stats", 
+        method: "GET",
+      }),
+      transformResponse: (response: any) => ({
+        data: response.data,
+      }),
+    }),
   }),
 });
 
 export const {
   useGetAllPostsQuery,
   useUpdatePostsMutation,
+  useDeletePostMutation,
   useGetAllUserQuery,
-  useDeleteUserMutation, 
-  useGetAllCommentsQuery
+  useDeleteUserMutation,
+  useGetAllCommentsQuery,
+  useGetAllRatingsQuery,  
 } = adminApi;

@@ -1,12 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import {
-  Table,
-  Tag,
-  TableColumnsType,
-  Pagination,
-  Modal,
-} from "antd";
+import { Table, Tag, TableColumnsType, Pagination, Modal } from "antd";
 import type { TableProps } from "antd";
 import { zodResolver } from "@hookform/resolvers/zod";
 import "./pagination.css";
@@ -14,6 +8,7 @@ import Image from "next/image";
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
 import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
@@ -21,6 +16,7 @@ import MyButton from "@/components/ui/MyButton/MyButton";
 import { toast } from "sonner";
 import { z } from "zod";
 import {
+  useDeletePostMutation,
   useGetAllPostsQuery,
   useUpdatePostsMutation,
 } from "@/redux/features/admin/admin.api";
@@ -52,7 +48,9 @@ const postSchema = z.object({
 const Myposts = () => {
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [actionStatus, setActionStatus] = useState<"APPROVED" | "REJECTED" | null>(null);
+  const [actionStatus, setActionStatus] = useState<
+    "APPROVED" | "REJECTED" | null
+  >(null);
   const [selectedPost, setSelectedPost] = useState<TPost | null>(null);
   const [updated] = useUpdatePostsMutation();
   const [searchTerm, setSearchTerm] = useState("");
@@ -63,6 +61,19 @@ const Myposts = () => {
     searchTerm,
     role: "ADMIN",
   });
+
+  const [deleteUser] = useDeletePostMutation();
+
+  const handleDelete = async (postId: string) => {
+    try {
+      await deleteUser(postId).unwrap();
+      toast.success("Post deleted successfully!");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      toast.error("Failed to delete post.");
+      console.log(error);
+    }
+  };
 
   const handleOpenModal = (status: "APPROVED" | "REJECTED", post: TPost) => {
     setActionStatus(status);
@@ -87,7 +98,7 @@ const Myposts = () => {
         }).unwrap();
 
         toast.success("Post updated successfully!");
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
       } catch (error: any) {
         toast.error("Post not updated!");
       }
@@ -163,16 +174,24 @@ const Myposts = () => {
             <CheckCircleOutlined
               onClick={() => isPending && handleOpenModal("APPROVED", record)}
               className={`text-xl cursor-pointer ${
-                isPending ? "text-green-600 hover:text-green-800" : "text-gray-400 cursor-not-allowed"
+                isPending
+                  ? "text-green-600 hover:text-green-800"
+                  : "text-gray-400 cursor-not-allowed"
               }`}
               style={{ pointerEvents: isPending ? "auto" : "none" }}
             />
             <CloseCircleOutlined
               onClick={() => isPending && handleOpenModal("REJECTED", record)}
               className={`text-xl cursor-pointer ${
-                isPending ? "text-red-500 hover:text-red-700" : "text-gray-400 cursor-not-allowed"
+                isPending
+                  ? "text-red-500 hover:text-red-700"
+                  : "text-gray-400 cursor-not-allowed"
               }`}
               style={{ pointerEvents: isPending ? "auto" : "none" }}
+            />
+            <DeleteOutlined
+              onClick={() => handleDelete(record.id)}
+              className="text-xl text-red-600 hover:text-red-800 cursor-pointer"
             />
           </div>
         );
@@ -180,7 +199,12 @@ const Myposts = () => {
     },
   ];
 
-  const onChange: TableProps<TPost>["onChange"] = (paginationConfig, _filters, _sorter, extra) => {
+  const onChange: TableProps<TPost>["onChange"] = (
+    paginationConfig,
+    _filters,
+    _sorter,
+    extra
+  ) => {
     if (extra.action === "paginate") {
       setPagination({
         current: paginationConfig.current!,

@@ -5,7 +5,7 @@ import {
   Tag,
   TableColumnsType,
   Pagination,
-  Modal,
+  Modal as AntdModal,
 } from "antd";
 import type { TableProps } from "antd";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,6 +14,7 @@ import Image from "next/image";
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
 import MyFormInput from "@/components/ui/MyForm/MyFormInput/MyFormInput";
@@ -22,6 +23,7 @@ import MyButton from "@/components/ui/MyButton/MyButton";
 import { toast } from "sonner";
 import { z } from "zod";
 import {
+  useDeletePostMutation,
   useGetAllPostsQuery,
   useUpdatePostsMutation,
 } from "@/redux/features/admin/admin.api";
@@ -56,6 +58,7 @@ const ManagePost = () => {
   const [actionStatus, setActionStatus] = useState<"APPROVED" | "REJECTED" | null>(null);
   const [selectedPost, setSelectedPost] = useState<TPost | null>(null);
   const [updated] = useUpdatePostsMutation();
+  const [deleteUser] = useDeletePostMutation();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [role, setRole] = useState("");
@@ -64,13 +67,26 @@ const ManagePost = () => {
     page: pagination.current,
     limit: pagination.pageSize,
     searchTerm,
-    role
+    role,
   });
 
   const handleOpenModal = (status: "APPROVED" | "REJECTED", post: TPost) => {
     setActionStatus(status);
     setSelectedPost(post);
     setIsModalOpen(true);
+  };
+
+  const handleDelete = async(postId: string) => {
+    
+        try {
+          await deleteUser(postId).unwrap();
+          toast.success("Post deleted successfully!");
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+          toast.error("Failed to delete post.");
+          console.log(error)
+        }  
+    
   };
 
   const handleFormSubmit = async (
@@ -84,15 +100,14 @@ const ManagePost = () => {
       };
 
       try {
-         await updated({
+        await updated({
           data: result,
           order_id: selectedPost.id,
         }).unwrap();
 
-        
         toast.success("Post updated successfully!");
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-      } catch (error: any) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
         toast.error("Post not updated!");
       }
       setIsModalOpen(false);
@@ -173,24 +188,28 @@ const ManagePost = () => {
         const isPending = record.status === "PENDING";
 
         return (
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center">
             <CheckCircleOutlined
               onClick={() => isPending && handleOpenModal("APPROVED", record)}
               className={`text-xl cursor-pointer ${
-                isPending ? "text-green-600 hover:text-green-800" : "text-gray-400 cursor-not-allowed"
+                isPending
+                  ? "text-green-600 hover:text-green-800"
+                  : "text-gray-400 cursor-not-allowed"
               }`}
-              style={{
-                pointerEvents: isPending ? "auto" : "none",
-              }}
+              style={{ pointerEvents: isPending ? "auto" : "none" }}
             />
             <CloseCircleOutlined
               onClick={() => isPending && handleOpenModal("REJECTED", record)}
               className={`text-xl cursor-pointer ${
-                isPending ? "text-red-500 hover:text-red-700" : "text-gray-400 cursor-not-allowed"
+                isPending
+                  ? "text-red-500 hover:text-red-700"
+                  : "text-gray-400 cursor-not-allowed"
               }`}
-              style={{
-                pointerEvents: isPending ? "auto" : "none",
-              }}
+              style={{ pointerEvents: isPending ? "auto" : "none" }}
+            />
+            <DeleteOutlined
+              onClick={() => handleDelete(record.id)}
+              className="text-xl text-red-600 hover:text-red-800 cursor-pointer"
             />
           </div>
         );
@@ -232,7 +251,6 @@ const ManagePost = () => {
         </div>
       </MyFormWrapper>
 
-      {/* 📋 Table Section */}
       <div className="overflow-x-auto">
         <Table
           columns={columns}
@@ -245,7 +263,6 @@ const ManagePost = () => {
         />
       </div>
 
-      {/* 📄 Pagination */}
       <div className="pagination-container mt-4 mb-4 flex justify-center">
         <Pagination
           current={pagination.current}
@@ -260,8 +277,7 @@ const ManagePost = () => {
         />
       </div>
 
-      {/* 🛠️ Modal for Admin Action */}
-      <Modal
+      <AntdModal
         title={`${actionStatus} Post`}
         open={isModalOpen}
         onCancel={() => {
@@ -281,7 +297,7 @@ const ManagePost = () => {
           />
           <MyButton type="submit" label="Submit" fullWidth />
         </MyFormWrapper>
-      </Modal>
+      </AntdModal>
     </div>
   );
 };
