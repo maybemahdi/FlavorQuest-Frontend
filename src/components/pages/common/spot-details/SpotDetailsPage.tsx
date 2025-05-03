@@ -3,43 +3,47 @@
 import Loading from "@/components/shared/Loading/Loading";
 import MyButton from "@/components/ui/MyButton/MyButton";
 import { useGetSinglePostQuery } from "@/redux/features/posts/posts.user.api";
+import { IFoodSpot } from "@/types";
 import { ChevronLeft, Lock, MapPin, Star, ThumbsUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 const SpotDetailsPage = ({ spotId }: { spotId: string }) => {
-  const spot = {
-    id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    title: "Mama's Taco Truck",
-    description:
-      "Authentic Mexican street tacos with homemade tortillas and a variety of salsas made daily. Famous for their al pastor tacos cooked on a vertical spit.",
-    location: "Downtown Square, 5th Avenue",
-    minPrice: 3.5,
-    maxPrice: 8.0,
-    category: {
-      id: "c1",
-      name: "Mexican",
-    },
-    status: "APPROVED",
-    isPremium: true,
-    adminComment: "Verified owner with food handling certificate",
-    user: {
-      id: "u1",
-      name: "Maria Gonzalez",
-      avatar: "/user-avatars/maria.jpg",
-    },
-    createdAt: new Date("2023-10-15T08:00:00Z"),
-    commentsCount: 24,
-    votesCount: 156,
-    reviewCount: 156,
-    averageRating: 4.8,
-    isFavorite: false,
-    image:
-      "https://images.unsplash.com/photo-1702568206165-3e81c138e256?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  };
+  // const spot = {
+  //   id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  //   title: "Mama's Taco Truck",
+  //   description:
+  //     "Authentic Mexican street tacos with homemade tortillas and a variety of salsas made daily. Famous for their al pastor tacos cooked on a vertical spit.",
+  //   location: "Downtown Square, 5th Avenue",
+  //   minPrice: 3.5,
+  //   maxPrice: 8.0,
+  //   category: {
+  //     id: "c1",
+  //     name: "Mexican",
+  //   },
+  //   status: "APPROVED",
+  //   isPremium: true,
+  //   adminComment: "Verified owner with food handling certificate",
+  //   user: {
+  //     id: "u1",
+  //     name: "Maria Gonzalez",
+  //     avatar: "/user-avatars/maria.jpg",
+  //   },
+  //   createdAt: new Date("2023-10-15T08:00:00Z"),
+  //   commentsCount: 24,
+  //   votesCount: 156,
+  //   reviewCount: 156,
+  //   averageRating: 4.8,
+  //   isFavorite: false,
+  //   image:
+  //     "https://images.unsplash.com/photo-1702568206165-3e81c138e256?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  // };
 
-  const { data, isLoading } = useGetSinglePostQuery(spotId, { skip: !spotId });
+  const { data: response, isLoading } = useGetSinglePostQuery(spotId, {
+    skip: !spotId,
+  });
 
+  const spot: IFoodSpot = response?.data;
   const priceRange = `$${spot?.minPrice.toFixed(2)} - $${spot?.maxPrice.toFixed(
     2
   )}`;
@@ -53,11 +57,13 @@ const SpotDetailsPage = ({ spotId }: { spotId: string }) => {
     return <Loading />;
   }
 
+  console.log(response);
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       {/* Back Button */}
       <Link
-        href="/"
+        href="/spots"
         className="inline-flex items-center mb-6 text-primary hover:underline"
       >
         <ChevronLeft className="w-5 h-5 mr-1" />
@@ -69,7 +75,7 @@ const SpotDetailsPage = ({ spotId }: { spotId: string }) => {
         {/* Left Column - Image */}
         <div className="relative aspect-square rounded-xl overflow-hidden shadow-lg">
           <Image
-            src={spot?.image}
+            src={spot?.image || "/placeholder.png"}
             alt={spot?.title}
             fill
             className="object-cover"
@@ -93,7 +99,8 @@ const SpotDetailsPage = ({ spotId }: { spotId: string }) => {
             <div className="flex items-center bg-primary/10 px-3 py-1 rounded-md">
               <Star className="w-4 h-4 fill-amber-400 text-amber-400 mr-1" />
               <span className="font-medium">
-                {spot?.averageRating.toFixed(1)} ({spot?.reviewCount} reviews)
+                {spot?.averageRating.toFixed(1)} ({spot?.ratings?.length}{" "}
+                reviews)
               </span>
             </div>
           </div>
@@ -121,10 +128,10 @@ const SpotDetailsPage = ({ spotId }: { spotId: string }) => {
 
           {/* Posted By */}
           <div className="flex items-center pt-4 border-t border-gray-200">
-            {spot.user.avatar ? (
+            {spot.user.profilePhoto ? (
               <div className="relative w-10 h-10 rounded-full overflow-hidden mr-3">
                 <Image
-                  src={spot?.user.avatar}
+                  src={spot?.user.profilePhoto || "/placeholder.png"}
                   alt={spot?.user.name}
                   fill
                   className="object-cover"
@@ -154,7 +161,7 @@ const SpotDetailsPage = ({ spotId }: { spotId: string }) => {
           {/* Action Buttons */}
           <div className="flex space-x-4 pt-4">
             <MyButton
-              label={`Like (${spot?.votesCount})`}
+              label={`Like (${spot?.upvoteCount})`}
               customIcon={<ThumbsUp className="w-5 h-5 mr-2" />}
               variant="outline"
               className="flex items-center"

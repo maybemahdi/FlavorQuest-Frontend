@@ -158,15 +158,15 @@ const MyPostTable = ({
                 <div className="flex space-x-4 text-sm">
                   <div className="flex items-center text-gray-900 ">
                     <Star className="mr-1 h-4 w-4 text-amber-400" />
-                    {post.averageRating.toFixed(1) ?? 0}
+                    {post.averageRating.toFixed(1) || 0}
                   </div>
                   <div className="flex items-center text-gray-900 ">
                     <ThumbsUp className="mr-1 h-4 w-4 text-blue-400" />
-                    {post.votesCount || 0}
+                    {post.upvotesCount || 0}
                   </div>
                   <div className="flex items-center text-gray-900 ">
                     <MessageSquare className="mr-1 h-4 w-4 text-green-400" />
-                    {post.commentsCount || 0}
+                    {post.commentCount || 0}
                   </div>
                 </div>
               </td>

@@ -36,8 +36,9 @@ export function FoodSpotCard({
     adminComment,
     user,
     createdAt,
-    commentsCount,
+    commentCount,
     votesCount,
+    upvotesCount,
     averageRating,
   } = spot;
 
@@ -174,11 +175,11 @@ export function FoodSpotCard({
         <div className="px-4 py-3 bg-gray-50 flex justify-between items-center">
           <div className="flex items-center text-sm text-gray-600">
             <ThumbsUp className="w-4 h-4 mr-1" />
-            <span>{votesCount}</span>
+            <span>{upvotesCount}</span>
           </div>
           <div className="flex items-center text-sm text-gray-600">
             <MessageSquare className="w-4 h-4 mr-1" />
-            <span>{commentsCount}</span>
+            <span>{commentCount}</span>
           </div>
           <div
             className={cn("text-xs text-gray-500", {

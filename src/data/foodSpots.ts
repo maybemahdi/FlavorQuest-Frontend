@@ -1,6 +1,6 @@
-import { IFoodSpot } from "@/types";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-export const foodSpots: IFoodSpot[] = [
+export const foodSpots: any = [
   {
     id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     title: "Mama's Taco Truck",
@@ -26,7 +26,7 @@ export const foodSpots: IFoodSpot[] = [
       avatar: "/user-avatars/maria.jpg",
     },
     createdAt: new Date("2023-10-15T08:00:00Z"),
-    commentsCount: 24,
+    commentCount: 24,
     votesCount: 156,
     reviewCount: 156,
     averageRating: 4.8,

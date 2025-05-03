@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface IFoodSpot {
   id: string;
   title: string;
@@ -15,15 +16,14 @@ export interface IFoodSpot {
   status: "PENDING" | "APPROVED" | "REJECTED";
   isPremium: boolean;
   adminComment?: string;
-  user: {
-    id: string;
-    name: string;
-    avatar?: string;
-  };
+  user: any;
+  ratings: any;
   createdAt: Date;
-  commentsCount: number;
-  votesCount: number;
-  reviewCount: number;
+  commentCount?: number;
+  votesCount?: number;
+  upvotesCount?: number;
+  upvoteCount?: number;
+  reviewCount?: number;
   averageRating: number;
   className?: string;
   showAdminInfo?: boolean;
