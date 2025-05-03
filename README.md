@@ -4,8 +4,8 @@ A feature-rich, responsive web application where users can discover, review, and
 
 ## 🚀 Live Demo
 
-Frontend: [https://your-frontend-url.com](https://your-frontend-url.com)  
-Backend API: [https://your-backend-url.com](https://your-backend-url.com)
+Frontend: [https://flavor-quest-frontend.vercel.app/](https://flavor-quest-frontend.vercel.app/)  
+Backend API: [https://flavor-quest-backend.vercel.app/api/v1](https://flavor-quest-backend.vercel.app/api/v1)
 
 ---
 
@@ -69,7 +69,7 @@ yarn install
 
 ## Create env file at root folder
 
-- NEXT_PUBLIC_BASE_URL="https://your-backend-url.com/api"
+- NEXT_PUBLIC_BASE_URL=https://flavor-quest-backend.vercel.app/api/v1
 - NEXT_PUBLIC_GOOGLE_ID="your-google-client-id"
 - NEXT_PUBLIC_GOOGLE_SECRET="your-google-client-secret"
 - NEXT_PUBLIC_NEXT_AUTH_SECRET="your-random-auth-secret"
