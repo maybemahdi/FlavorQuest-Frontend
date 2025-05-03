@@ -3,47 +3,18 @@
 import Loading from "@/components/shared/Loading/Loading";
 import MyButton from "@/components/ui/MyButton/MyButton";
 import { useGetSinglePostQuery } from "@/redux/features/posts/posts.user.api";
-import { IFoodSpot } from "@/types";
+import { ISinglePost } from "@/types/singlePost.interface";
 import { ChevronLeft, Lock, MapPin, Star, ThumbsUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 const SpotDetailsPage = ({ spotId }: { spotId: string }) => {
-  // const spot = {
-  //   id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  //   title: "Mama's Taco Truck",
-  //   description:
-  //     "Authentic Mexican street tacos with homemade tortillas and a variety of salsas made daily. Famous for their al pastor tacos cooked on a vertical spit.",
-  //   location: "Downtown Square, 5th Avenue",
-  //   minPrice: 3.5,
-  //   maxPrice: 8.0,
-  //   category: {
-  //     id: "c1",
-  //     name: "Mexican",
-  //   },
-  //   status: "APPROVED",
-  //   isPremium: true,
-  //   adminComment: "Verified owner with food handling certificate",
-  //   user: {
-  //     id: "u1",
-  //     name: "Maria Gonzalez",
-  //     avatar: "/user-avatars/maria.jpg",
-  //   },
-  //   createdAt: new Date("2023-10-15T08:00:00Z"),
-  //   commentsCount: 24,
-  //   votesCount: 156,
-  //   reviewCount: 156,
-  //   averageRating: 4.8,
-  //   isFavorite: false,
-  //   image:
-  //     "https://images.unsplash.com/photo-1702568206165-3e81c138e256?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  // };
 
   const { data: response, isLoading } = useGetSinglePostQuery(spotId, {
     skip: !spotId,
   });
 
-  const spot: IFoodSpot = response?.data;
+  const spot: ISinglePost = response?.data;
   const priceRange = `$${spot?.minPrice.toFixed(2)} - $${spot?.maxPrice.toFixed(
     2
   )}`;

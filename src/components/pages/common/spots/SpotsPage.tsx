@@ -8,7 +8,7 @@ import Loading from "@/components/shared/Loading/Loading";
 import MyContainer from "@/components/shared/MyContainer/MyContainer";
 import { useGetAllCategoryQuery } from "@/redux/features/category/category.api";
 import { useGetAllPostQuery } from "@/redux/features/posts/posts.user.api";
-import { IFoodSpot } from "@/types";
+import { IPost } from "@/types/post.interface";
 import { Empty, Pagination } from "antd";
 import { ChevronDown, Search } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -192,7 +192,7 @@ const SpotsPage = () => {
       <MyContainer className="py-8 md:py-12">
         {!isLoading && !isFetching && data?.data?.data?.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {data?.data?.data?.map((spot: IFoodSpot) => (
+            {data?.data?.data?.map((spot: IPost) => (
               <FoodSpotCard
                 key={spot?.id}
                 spot={spot}

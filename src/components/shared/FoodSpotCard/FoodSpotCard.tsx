@@ -2,7 +2,7 @@
 "use client";
 // components/FoodSpotCard.tsx
 import { cn } from "@/lib/utils";
-import { IFoodSpot } from "@/types";
+import { IPost } from "@/types/post.interface";
 import {
   Lock,
   MapPin,
@@ -18,7 +18,7 @@ export function FoodSpotCard({
   showAdminInfo = false,
   className,
 }: {
-  spot: IFoodSpot;
+  spot: IPost;
   showAdminInfo?: boolean;
   className?: string;
 }) {
@@ -36,8 +36,7 @@ export function FoodSpotCard({
     adminComment,
     user,
     createdAt,
-    commentCount,
-    votesCount,
+    votes,
     upvotesCount,
     averageRating,
   } = spot;
@@ -149,10 +148,10 @@ export function FoodSpotCard({
 
           {/* Posted By */}
           <div className="flex items-center mt-4 pt-3 border-t border-gray-100">
-            {user.avatar ? (
+            {user.profilePhoto ? (
               <div className="relative w-6 h-6 rounded-full overflow-hidden mr-2">
                 <Image
-                  src={user?.avatar}
+                  src={user?.profilePhoto}
                   alt={user.name}
                   fill
                   className="object-cover"
@@ -179,7 +178,7 @@ export function FoodSpotCard({
           </div>
           <div className="flex items-center text-sm text-gray-600">
             <MessageSquare className="w-4 h-4 mr-1" />
-            <span>{commentCount}</span>
+            <span>{votes?.length}</span>
           </div>
           <div
             className={cn("text-xs text-gray-500", {

@@ -1,4 +1,4 @@
-import { IFoodSpot } from "@/types";
+import { IMyPost } from "@/types/mypost.interface";
 import { Tooltip } from "antd";
 import {
   Info,
@@ -17,7 +17,7 @@ const MyPostTable = ({
   onEdit,
   onDelete,
 }: {
-  posts: IFoodSpot[];
+  posts: IMyPost[];
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
 }) => {
@@ -166,7 +166,7 @@ const MyPostTable = ({
                   </div>
                   <div className="flex items-center text-gray-900 ">
                     <MessageSquare className="mr-1 h-4 w-4 text-green-400" />
-                    {post.commentCount || 0}
+                    {post.comments.length || 0}
                   </div>
                 </div>
               </td>

@@ -1,11 +1,11 @@
 // components/FeaturedSpots.tsx
-import { foodSpots } from "@/data/foodSpots";
 import { FoodSpotCard } from "@/components/shared/FoodSpotCard/FoodSpotCard";
-import { IFoodSpot } from "@/types";
-import MyButton from "@/components/ui/MyButton/MyButton";
 import MyContainer from "@/components/shared/MyContainer/MyContainer";
-import Link from "next/link";
 import SectionHead from "@/components/shared/SectionHead/SectionHead";
+import MyButton from "@/components/ui/MyButton/MyButton";
+import { foodSpots } from "@/data/foodSpots";
+import { IPost } from "@/types/post.interface";
+import Link from "next/link";
 
 export default function FeaturedSpots() {
   return (
@@ -19,7 +19,7 @@ export default function FeaturedSpots() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {foodSpots?.map((spot: IFoodSpot) => (
+          {foodSpots?.map((spot: IPost) => (
             <FoodSpotCard
               key={spot?.id}
               spot={spot}
