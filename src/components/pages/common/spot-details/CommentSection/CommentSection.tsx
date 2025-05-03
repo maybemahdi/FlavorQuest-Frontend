@@ -3,13 +3,17 @@
 import MyButton from "@/components/ui/MyButton/MyButton";
 import MyFormTextArea from "@/components/ui/MyForm/MyFormTextArea/MyFormTextArea";
 import MyFormWrapper from "@/components/ui/MyForm/MyFormWrapper/MyFormWrapper";
+import { selectCurrentToken } from "@/redux/features/auth/authSlice";
 import { useCreateCommentMutation } from "@/redux/features/comment/comment.api";
+import { useAppSelector } from "@/redux/hooks";
 import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
+import { verifyToken } from "@/utils/verifyToken";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Pagination } from "antd";
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 import { useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 
 interface IComment {
@@ -42,8 +46,14 @@ export function CommentSection({ comments, postId }: CommentSectionProps) {
   const [createComment] = useCreateCommentMutation();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
+  const currentUserToken = useAppSelector(selectCurrentToken);
+  const currentUser = currentUserToken ? verifyToken(currentUserToken) : null;
 
   const handleSubmit = async (data: CommentFormInputs, reset: any) => {
+    if (!currentUser) {
+      toast.error("You must be logged in to perform this action!");
+      return;
+    }
     const res = await handleAsyncWithToast(async () => {
       return createComment({ id: postId, data: data });
     }, "Posting comment...");
@@ -86,7 +96,7 @@ export function CommentSection({ comments, postId }: CommentSectionProps) {
           </div>
         </MyFormWrapper>
       </div>
-      {comments.length === 0 ? (
+      {paginatedComments.length === 0 ? (
         <p className="text-gray-500">
           No comments yet. Be the first to comment!
         </p>

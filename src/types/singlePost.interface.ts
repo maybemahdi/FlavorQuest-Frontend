@@ -18,12 +18,18 @@ interface ICategory {
   name: string;
 }
 
+interface IRatingUser {
+  name: string;
+  profilePhoto?: string; // Optional since some users might not have a photo
+}
+
 interface IRating {
   id: string;
-  score: number;
+  score: number; // Typically 1-5 for star ratings
   userId: string;
   postId: string;
-  createdAt: string;
+  createdAt: string; // ISO date string
+  user: IRatingUser;
 }
 
 interface IVote {

@@ -28,14 +28,14 @@ const ratingApi = baseApi.injectEndpoints({
     }),
 
     createRating: builder.mutation({
-      query: (data) => {
+      query: ({ id, data }) => {
         return {
-          url: "/rating",
+          url: `/rating/${id}`,
           method: "POST",
           body: data,
         };
       },
-      invalidatesTags: ["rating"],
+      invalidatesTags: ["rating", "post"],
     }),
   }),
 });

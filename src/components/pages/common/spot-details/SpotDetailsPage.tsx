@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { CommentSection } from "./CommentSection/CommentSection";
 import MyContainer from "@/components/shared/MyContainer/MyContainer";
+import RatingSection from "./RatingSection/RatingSection";
 
 interface DecodedUser extends JwtPayload {
   id: string;
@@ -81,7 +82,7 @@ const SpotDetailsPage = ({ spotId }: { spotId: string }) => {
   const createVote = async (type: string) => {
     setIsActionLoading(true);
     if (!currentUser) {
-      toast.error("Please sign in to vote!");
+      toast.error("You must be logged in to perform this action!");
       setIsActionLoading(false);
       return;
     }
@@ -212,7 +213,7 @@ const SpotDetailsPage = ({ spotId }: { spotId: string }) => {
           )}
 
           {/* Action Buttons */}
-          <div className="flex space-x-4 pt-4">
+          <div className="flex flex-col xs:flex-row gap-4 pt-4">
             <MyButton
               onClick={() => createVote("UPVOTE")}
               isDisabled={isFetching || isActionLoading}
@@ -245,18 +246,20 @@ const SpotDetailsPage = ({ spotId }: { spotId: string }) => {
         </div>
       </div>
 
-      {/* Reviews Section */}
-      {/* <section className="mt-16">
-        <h2 className="text-2xl font-bold mb-6">Customer Reviews</h2>
-        <ReviewSection spotId={spot.id} />
-      </section> */}
-
       {/* Comments Section */}
       <section className="mt-16">
         <h2 className="text-2xl font-bold mb-6">
           Comments ({spot?.commentCount})
         </h2>
         <CommentSection comments={spot?.comments} postId={spot?.id} />
+      </section>
+
+      {/* Rating section  */}
+      <section className="mt-16">
+        <h2 className="text-2xl font-bold mb-6">
+          Rating ({spot?.ratings?.length})
+        </h2>
+        <RatingSection ratings={spot?.ratings} postId={spot?.id} />
       </section>
     </MyContainer>
   );

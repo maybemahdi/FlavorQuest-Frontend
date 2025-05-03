@@ -237,7 +237,9 @@ const MyPostsPage = () => {
           ""
         )}
 
-        {!isLoading && !isFetching && data?.data?.data?.length < 1 ? (
+        {!isLoading &&
+        !isFetching &&
+        (!data?.data?.data || data?.data?.data?.length < 1) ? (
           <div className="text-center flex items-center justify-center flex-col gap-3 py-12">
             <Empty description={false} />
             <h3 className="text-lg font-medium text-gray-900">
