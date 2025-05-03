@@ -5,28 +5,19 @@
 import React from "react";
 import { Table } from "antd";
 import type { TableColumnsType } from "antd";
+import { useGetAllCategoryQuery } from "@/redux/features/admin/admin.api";
 
 type TCategory = {
   id: string;
   name: string;
 };
 
-const categoryData: TCategory[] = [
-  {
-    id: "c2865189-b55d-480d-868a-ba4ed6547488",
-    name: "Snacks",
-  },
-  {
-    id: "c5446ab6-bf13-4336-b117-0370b5cb1e56",
-    name: "Meals",
-  },
-  {
-    id: "19b74169-17c7-489d-855e-138dea2f3199",
-    name: "Drinks",
-  },
-];
 
 const ManageCategories = () => {
+  const { data: postsData, isFetching } = useGetAllCategoryQuery({});
+
+ console.log(postsData)
+
   const columns: TableColumnsType<TCategory> = [
     {
       title: "ID",
@@ -45,10 +36,11 @@ const ManageCategories = () => {
       <div className="overflow-x-auto">
         <Table
           columns={columns}
-          dataSource={categoryData}
+          dataSource={postsData?.data}
           rowKey="id"
           pagination={false}
           scroll={{ x: 500 }}
+          loading={isFetching}
         />
       </div>
     </div>

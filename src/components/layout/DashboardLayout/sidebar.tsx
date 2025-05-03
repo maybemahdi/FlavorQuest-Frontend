@@ -91,9 +91,9 @@ function Nav({ role }: { role: string }) {
             label="Manage Categories"
           >
             <NavItem
-              href="/dashboard/all-categories"
+              href="/dashboard/manage-category"
               label="All Categories"
-              isActive={pathname === "/dashboard/all-categories"}
+              isActive={pathname === "/dashboard/manage-category"}
               isNested
             />
             <NavItem

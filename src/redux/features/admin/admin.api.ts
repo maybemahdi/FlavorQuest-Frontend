@@ -138,6 +138,19 @@ const adminApi = baseApi.injectEndpoints({
         data: response.data,
       }),
     }),
+
+    // get all category
+
+    getAllCategory: builder.query({
+      query: () => ({
+        url: "/category",
+        method: "GET",
+      }),
+      transformResponse: (response: any) => ({
+        data: response.data,
+      }),
+    }),
+
   }),
 });
 
@@ -148,5 +161,6 @@ export const {
   useGetAllUserQuery,
   useDeleteUserMutation,
   useGetAllCommentsQuery,
-  useGetAllRatingsQuery,  
+  useGetAllRatingsQuery,
+  useGetAllCategoryQuery  
 } = adminApi;
