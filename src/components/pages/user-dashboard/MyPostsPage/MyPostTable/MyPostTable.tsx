@@ -1,7 +1,15 @@
 import { IFoodSpot } from "@/types";
 import { Tooltip } from "antd";
-import { Info, Lock, MapPin, MessageSquare, ThumbsUp } from "lucide-react";
+import {
+  Info,
+  Lock,
+  MapPin,
+  MessageSquare,
+  Star,
+  ThumbsUp,
+} from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 
 const MyPostTable = ({
@@ -81,7 +89,10 @@ const MyPostTable = ({
                     />
                   </div>
                   <div className="ml-4">
-                    <div className="text-sm font-medium text-gray-900  flex items-center">
+                    <Link
+                      href={`/spots/${post?.id}`}
+                      className="text-sm cursor-pointer font-medium text-gray-900  flex items-center"
+                    >
                       {post?.title?.length > 30
                         ? post?.title?.substring(0, 30) + "..."
                         : post?.title}
@@ -91,7 +102,7 @@ const MyPostTable = ({
                           Premium
                         </span>
                       )}
-                    </div>
+                    </Link>
                     <div className="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">
                       {post.description}
                     </div>
@@ -145,10 +156,10 @@ const MyPostTable = ({
               {/* Stats Column */}
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="flex space-x-4 text-sm">
-                  {/* <div className="flex items-center text-gray-900 ">
+                  <div className="flex items-center text-gray-900 ">
                     <Star className="mr-1 h-4 w-4 text-amber-400" />
                     {post.averageRating.toFixed(1) ?? 0}
-                  </div> */}
+                  </div>
                   <div className="flex items-center text-gray-900 ">
                     <ThumbsUp className="mr-1 h-4 w-4 text-blue-400" />
                     {post.votesCount || 0}

@@ -1,26 +1,33 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { useAppSelector } from "@/redux/hooks";
 import {
   ChartBarIncreasing,
   ChartBarStacked,
   ChevronDown,
-  ChevronsRight,
   Dot,
-  Home,
-  LayoutDashboard,
   MapPinned,
   ShieldQuestion,
-  ShoppingBag,
   UserPen,
   Users,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Logo from "./logo";
 
-export default function Sidebar({ role }: { role: string }) {
+export default function Sidebar({
+  myData,
+  role,
+}: {
+  myData: Record<string, unknown>;
+  role: string;
+}) {
+  const currentUser = useAppSelector(selectCurrentUser);
   return (
     <div className="h-full flex flex-col border-r border-border">
       <div className="flex items-center justify-between h-16 px-4 border-b border-border">
@@ -34,7 +41,7 @@ export default function Sidebar({ role }: { role: string }) {
       </div>
 
       <div className="p-4 border-t border-border">
-        <ProfileSection />
+        <ProfileSection myData={myData} />
       </div>
     </div>
   );
@@ -129,7 +136,7 @@ function Nav({ role }: { role: string }) {
             label="Dashboard"
             isActive={pathname === "/user"}
           />
-          <NavGroup icon={<MapPinned size={20} />} label="Manage My Spots">
+          <NavGroup icon={<MapPinned size={20} />} label="Manage Posts">
             <NavItem
               href="/user/my-posts"
               label="My Posts"
@@ -174,7 +181,7 @@ function NavItem({
     <Link
       href={href}
       className={`
-        flex items-center gap-3 px-3 py-2 rounded-md group transition-colors
+        flex items-center hover:bg-primary gap-3 px-3 py-2 rounded-md group transition-colors duration-300
         ${isActive ? "bg-primary text-primary-foreground" : "hover:bg-muted"}
         ${isNested ? "pl-10" : ""}
       `}
@@ -224,16 +231,26 @@ function NavGroup({ icon, label, children }: NavGroupProps) {
   );
 }
 
-function ProfileSection() {
+function ProfileSection({ myData }: { myData: Record<string, unknown> }) {
   return (
     <div className="flex items-center gap-3">
-      <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-medium flex-shrink-0">
-        JD
-      </div>
+      {myData?.profilePhoto ? (
+        <Image
+          src={myData?.profilePhoto as string}
+          alt="profile"
+          height={40}
+          width={40}
+          className="rounded-full object-cover w-11 h-11"
+        />
+      ) : (
+        <div className="w-11 h-11 rounded-full bg-primary text-white flex items-center justify-center text-primary-foreground font-medium flex-shrink-0">
+          JD
+        </div>
+      )}
       <div className="overflow-hidden">
-        <div className="font-medium truncate">John Doe</div>
+        <div className="font-medium truncate">{myData?.name as string}</div>
         <div className="text-xs text-muted-foreground truncate">
-          owner@streetfood.com
+          {myData?.email as string}
         </div>
       </div>
     </div>

@@ -4,8 +4,8 @@
 import Loading from "@/components/shared/Loading/Loading";
 import { useGetAllCategoryQuery } from "@/redux/features/category/category.api";
 import {
-    useDeletePostMutation,
-    useGetMyPostsQuery
+  useDeletePostMutation,
+  useGetMyPostsQuery,
 } from "@/redux/features/posts/posts.user.api";
 import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
 import { Empty, Pagination } from "antd";
@@ -14,6 +14,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import MyPostTable from "./MyPostTable/MyPostTable";
+import SectionHead from "@/components/shared/SectionHead/SectionHead";
+import Link from "next/link";
+import MyButton from "@/components/ui/MyButton/MyButton";
 
 const MyPostsPage = () => {
   // State management
@@ -118,7 +121,8 @@ const MyPostsPage = () => {
     return <Loading />;
   }
   return (
-    <div className="min-h-screen bg-gray-50 py-8 md:py-12">
+    <div className="min-h-[calc(100vh-200px)] bg-gray-50 py-5">
+      <SectionHead title="Manage your posts" className="text-start mb-3" />
       {/* Search and Filter Bar */}
       <div className="bg-white z-20">
         <div className="py-4">
@@ -209,7 +213,7 @@ const MyPostsPage = () => {
         </div>
       </div>
 
-      {/* Spots Grid */}
+      {/* Spots table */}
       <div className="py-5">
         {!isLoading && !isFetching && data?.data?.data?.length > 0 ? (
           <div className="w-full">
@@ -233,15 +237,15 @@ const MyPostsPage = () => {
           ""
         )}
 
-        {!isLoading && !isFetching && data?.data?.data?.length < 1 ? (
-          <div className="text-center py-12">
+        {!isLoading && !isFetching && !data?.data?.data ? (
+          <div className="text-center flex items-center justify-center flex-col gap-3 py-12">
             <Empty description={false} />
             <h3 className="text-lg font-medium text-gray-900">
               No spots found
             </h3>
-            <p className="mt-1 text-gray-500">
-              Try adjusting your search or filters
-            </p>
+            <Link href={`/user/create-post`}>
+              <MyButton label="Create a post" className="rounded-full" />
+            </Link>
           </div>
         ) : (
           ""

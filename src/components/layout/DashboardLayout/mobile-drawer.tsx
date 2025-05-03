@@ -21,6 +21,7 @@ import {
   ChartBarStacked,
   ShieldQuestion,
   UserPen,
+  Dot,
 } from "lucide-react";
 import Logo from "./logo";
 
@@ -186,7 +187,7 @@ function MobileNav({ role }: { role: string }) {
               label="Dashboard"
               isActive={pathname === "/user"}
             />
-            <NavGroup icon={<MapPinned size={20} />} label="Manage My Spots">
+            <NavGroup icon={<MapPinned size={20} />} label="Manage My Posts">
               <NavItem
                 href="/user/my-posts"
                 label="My Posts"
@@ -232,13 +233,16 @@ function NavItem({
     <Link
       href={href}
       className={`
-        flex items-center gap-3 px-3 py-2 rounded-md transition-colors
+        flex items-center hover:bg-primary gap-3 px-3 py-2 rounded-md transition-colors duration-300
         ${isActive ? "bg-primary text-primary-foreground" : "hover:bg-muted"}
         ${isNested ? "pl-10" : ""}
       `}
     >
       {icon && <span className="flex-shrink-0">{icon}</span>}
-      <span className="truncate">{label}</span>
+      <span className="truncate flex items-center">
+        {isNested ? <Dot /> : ""}
+        {label}
+      </span>
     </Link>
   );
 }

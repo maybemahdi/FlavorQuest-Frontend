@@ -3,9 +3,10 @@ import React from "react";
 import Image from "next/image";
 import { useGetMeQuery } from "@/redux/features/auth/authApi";
 import Loading from "@/components/shared/Loading/Loading";
+import { Lock } from "lucide-react";
+import Link from "next/link";
 
 const ProfilePage = () => {
-
   const { data: getMyProfileResponse, isLoading } = useGetMeQuery(undefined);
 
   if (isLoading) {
@@ -33,7 +34,30 @@ const ProfilePage = () => {
           </h2>
 
           {/* Email */}
-          <p className="text-gray-600">{getMyProfileResponse?.data?.email}</p>
+          <p className="text-gray-600">
+            Email: {getMyProfileResponse?.data?.email}
+          </p>
+          <p className="text-gray-600">
+            Phone: {getMyProfileResponse?.data?.contactNumber}
+          </p>
+          {getMyProfileResponse?.data?.role === "PREMIUM_USER" ? (
+            <p className="text-white bg-primary flex items-center gap-2 p-2 mt-2 rounded-full text-xs justify-center">
+              <Lock size={20} className="text-white" /> Premium Member
+            </p>
+          ) : getMyProfileResponse?.data?.role === "USER" ? (
+            <Link
+              href={`/checkout`}
+              className="text-white cursor-pointer bg-primary flex items-center gap-2 p-2 mt-2 rounded-full text-xs justify-center"
+            >
+              <Lock size={20} className="text-white" /> Upgrade
+            </Link>
+          ) : getMyProfileResponse?.data?.role === "USER" ? (
+            <p className="text-white bg-primary flex items-center gap-2 p-2 mt-2 rounded-full text-xs justify-center">
+              <Lock size={20} className="text-white" /> Admin
+            </p>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>
