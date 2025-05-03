@@ -33,6 +33,7 @@ const ManageCategories = () => {
 
   return (
     <div className="px-5 mt-6">
+      <h2 className="text-2xl font-semibold mb-4 text-gray-800">All category</h2>
       <div className="overflow-x-auto">
         <Table
           columns={columns}

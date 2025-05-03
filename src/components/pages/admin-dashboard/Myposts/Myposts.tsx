@@ -215,6 +215,7 @@ const Myposts = () => {
 
   return (
     <div className="px-5 mt-6">
+      
       <MyFormWrapper className="mb-10" onSubmit={() => {}}>
         <div className="flex gap-5 flex-wrap">
           <MyFormInput
@@ -224,7 +225,7 @@ const Myposts = () => {
           />
         </div>
       </MyFormWrapper>
-
+      <h2 className="text-2xl font-semibold mb-4 text-gray-800">My posts</h2>
       <div className="overflow-x-auto">
         <Table
           columns={columns}

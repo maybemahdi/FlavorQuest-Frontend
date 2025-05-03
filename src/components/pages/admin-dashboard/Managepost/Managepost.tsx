@@ -252,7 +252,7 @@ const ManagePost = () => {
           />
         </div>
       </MyFormWrapper>
-
+      <h2 className="text-2xl font-semibold mb-4 mt-4 text-gray-800">All posts</h2>
       <div className="overflow-x-auto">
         <Table
           columns={columns}

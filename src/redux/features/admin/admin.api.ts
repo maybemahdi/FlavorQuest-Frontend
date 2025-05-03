@@ -96,7 +96,7 @@ const adminApi = baseApi.injectEndpoints({
       transformResponse: (response: any) => ({
         data: response.data,
       }),
-      invalidatesTags: ["admin"],
+      invalidatesTags: ["posts"],
     }),
 
     deletePost: builder.mutation({
@@ -104,9 +104,8 @@ const adminApi = baseApi.injectEndpoints({
         url: `/post/delete/${userId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["admin"],
+      invalidatesTags: ["posts"],
     }),
-
     // Get all users
     getAllUser: builder.query({
       query: (params) => {
@@ -151,6 +150,15 @@ const adminApi = baseApi.injectEndpoints({
     deleteUser: builder.mutation({
       query: (userId: string) => ({
         url: `/users/delete/${userId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["admin"],
+    }),
+
+    BlockUser: builder.mutation({
+      query: (userId: string) => ({
+
+        url: `/users/block/${userId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["admin"],
@@ -210,6 +218,7 @@ export const {
   useGetAdminPostsQuery,
   useUpdatePostsMutation,
   useDeletePostMutation,
+  useBlockUserMutation,
   useGetAllUserQuery,
   useDeleteUserMutation,
   useGetAllCommentsQuery,

@@ -56,7 +56,7 @@ const Comments = () => {
       <div className="overflow-x-auto">
         <Table
           columns={columns}
-          dataSource={commentsData?.data || []}
+          dataSource={commentsData?.data?.data || []}
           rowKey="id"
           loading={isFetching}
           pagination={false}

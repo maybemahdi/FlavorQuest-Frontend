@@ -1,12 +1,24 @@
 "use client";
-import { Table, Tag, Pagination, Tooltip, Popconfirm, message } from "antd";
+import {
+  Table,
+  Tag,
+  Pagination,
+  Tooltip,
+  Popconfirm,
+  message,
+} from "antd";
 import type { TableColumnsType, TableProps } from "antd";
 import {
   useGetAllUserQuery,
   useDeleteUserMutation,
+  useBlockUserMutation,
 } from "@/redux/features/admin/admin.api";
 import { useState } from "react";
-import { StopOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  StopOutlined,
+  DeleteOutlined,
+  CheckCircleOutlined,
+} from "@ant-design/icons";
 import Image from "next/image";
 
 type TUser = {
@@ -14,7 +26,7 @@ type TUser = {
   name: string;
   email: string;
   role: string;
-  status: string;
+  status: "ACTIVE" | "BLOCKED";
   profilePhoto: string;
   contactNumber: string;
 };
@@ -28,14 +40,28 @@ const ManageUsers = () => {
   });
 
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
+  const [blockUser, { isLoading: isBlocking }] = useBlockUserMutation();
 
   const handleDelete = async (userId: string) => {
     try {
       await deleteUser(userId).unwrap();
       message.success("User deleted successfully!");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
     } catch (error: any) {
       message.error("Failed to delete user!");
+    }
+  };
+
+  const handleBlockToggle = async (userId: string) => {
+    try {
+      const result = await blockUser(userId).unwrap();
+      console.log(result)
+      message.success(
+        `successfully do this`
+      );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    } catch (error: any) {
+      message.error("Failed to update user status!");
     }
   };
 
@@ -82,25 +108,22 @@ const ManageUsers = () => {
     {
       title: "Actions",
       render: (_, record) => {
-        const isDisabled = record.status !== "ACTIVE";
+        const isBlocked = record.status === "BLOCKED";
 
         return (
           <div className="flex gap-4">
-            <Tooltip title="Block User">
+            <Tooltip title={isBlocked ? "Unblock User" : "Block User"}>
               <Popconfirm
-                title="Are you sure to BLock this user?"
-                onConfirm={() => handleDelete(record.id)}
+                title={`Are you sure to ${isBlocked ? "unblock" : "block"} this user?`}
+                onConfirm={() => handleBlockToggle(record.id)}
                 okText="Yes"
                 cancelText="No"
-                disabled={isDisabled}
               >
-                <StopOutlined
-                  className={`text-xl ${
-                    isDisabled
-                      ? "text-gray-400 cursor-not-allowed"
-                      : "text-orange-500 hover:text-orange-600 cursor-pointer"
-                  }`}
-                />
+                {isBlocked ? (
+                  <CheckCircleOutlined className="text-xl text-green-500 hover:text-green-600 cursor-pointer" />
+                ) : (
+                  <StopOutlined className="text-xl text-orange-500 hover:text-orange-600 cursor-pointer" />
+                )}
               </Popconfirm>
             </Tooltip>
 
@@ -110,11 +133,11 @@ const ManageUsers = () => {
                 onConfirm={() => handleDelete(record.id)}
                 okText="Yes"
                 cancelText="No"
-                disabled={isDisabled}
+                disabled={isBlocked}
               >
                 <DeleteOutlined
                   className={`text-xl ${
-                    isDisabled
+                    isBlocked
                       ? "text-gray-400 cursor-not-allowed"
                       : "text-red-500 hover:text-red-600 cursor-pointer"
                   }`}
@@ -136,10 +159,11 @@ const ManageUsers = () => {
 
   return (
     <div className="p-6">
+      <h2 className="text-2xl font-semibold mb-4 text-gray-800">Manage Users</h2>
       <Table
         columns={columns}
         dataSource={users}
-        loading={isFetching || isDeleting}
+        loading={isFetching || isDeleting || isBlocking}
         pagination={false}
         rowKey="id"
         scroll={{ x: 900 }}
