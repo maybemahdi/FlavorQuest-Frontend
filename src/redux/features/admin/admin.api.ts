@@ -205,6 +205,7 @@ const adminApi = baseApi.injectEndpoints({
       transformResponse: (response: any) => ({
         data: response.data,
       }),
+      providesTags:["categories"]
     }),
 
     postCategory: builder.mutation({
@@ -216,8 +217,15 @@ const adminApi = baseApi.injectEndpoints({
       transformResponse: (response: any) => ({
         data: response.data,
       }),
+      invalidatesTags:["categories"]
     }),
-    
+    deleteCategory: builder.mutation({
+      query: (userId: string) => ({
+        url: `/category/delete/${userId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["categories"],
+    }),
 
   }),
 });
@@ -234,5 +242,6 @@ export const {
   useDeleteCommentMutation,
   useGetAllRatingsQuery,
   useGetAllCategoryQuery,
-  usePostCategoryMutation  
+  usePostCategoryMutation,
+  useDeleteCategoryMutation  
 } = adminApi;
