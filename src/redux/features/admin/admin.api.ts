@@ -151,6 +151,18 @@ const adminApi = baseApi.injectEndpoints({
       }),
     }),
 
+    postCategory: builder.mutation({
+      query: (categoryData: { name: string }) => ({
+        url: "/category",
+        method: "POST",
+        body: categoryData,
+      }),
+      transformResponse: (response: any) => ({
+        data: response.data,
+      }),
+    }),
+    
+
   }),
 });
 
@@ -162,5 +174,6 @@ export const {
   useDeleteUserMutation,
   useGetAllCommentsQuery,
   useGetAllRatingsQuery,
-  useGetAllCategoryQuery  
+  useGetAllCategoryQuery,
+  usePostCategoryMutation  
 } = adminApi;
