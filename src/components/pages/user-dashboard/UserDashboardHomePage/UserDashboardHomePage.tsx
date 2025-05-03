@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import { useGetUserStatsQuery } from "@/redux/features/userStats/userStats.api";
-import { LocationEdit, Star, Vote } from "lucide-react";
-import MyPostTable from "../MyPostsPage/MyPostTable/MyPostTable";
-import { Empty } from "antd";
-import {
-  useDeletePostMutation,
-  useGetMyPostsQuery,
-} from "@/redux/features/posts/posts.user.api";
-import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
-import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
-import { useRouter } from "next/navigation";
 import SectionHead from "@/components/shared/SectionHead/SectionHead";
 import MyButton from "@/components/ui/MyButton/MyButton";
+import {
+  useDeletePostForUserMutation,
+  useGetMyPostsQuery
+} from "@/redux/features/posts/posts.user.api";
+import { useGetUserStatsQuery } from "@/redux/features/userStats/userStats.api";
+import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
+import { Empty } from "antd";
+import { LocationEdit, Star, Vote } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import MyPostTable from "../MyPostsPage/MyPostTable/MyPostTable";
 
 const UserDashboardHomePage = () => {
   const router = useRouter();
@@ -44,7 +44,7 @@ const UserDashboardHomePage = () => {
     router.push(`/user/update-post/${postId}`);
   };
 
-  const [deletePost] = useDeletePostMutation();
+  const [deletePost] = useDeletePostForUserMutation();
 
   const handleDelete = async (postId: string) => {
     Swal.fire({

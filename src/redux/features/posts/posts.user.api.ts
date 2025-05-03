@@ -64,7 +64,7 @@ const postUserApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["post"],
     }),
-    deletePost: builder.mutation({
+    deletePostForUser: builder.mutation({
       query: (id) => {
         return {
           url: `/post/delete/${id}`,
@@ -81,6 +81,6 @@ export const {
   useUpdatePostMutation,
   useGetAllPostQuery,
   useGetSinglePostQuery,
-  useDeletePostMutation,
+  useDeletePostForUserMutation,
   useGetMyPostsQuery,
 } = postUserApi;

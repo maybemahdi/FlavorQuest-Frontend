@@ -2,21 +2,21 @@
 "use client";
 
 import Loading from "@/components/shared/Loading/Loading";
+import SectionHead from "@/components/shared/SectionHead/SectionHead";
+import MyButton from "@/components/ui/MyButton/MyButton";
 import { useGetAllCategoryQuery } from "@/redux/features/category/category.api";
 import {
-  useDeletePostMutation,
-  useGetMyPostsQuery,
+  useDeletePostForUserMutation,
+  useGetMyPostsQuery
 } from "@/redux/features/posts/posts.user.api";
 import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
 import { Empty, Pagination } from "antd";
 import { ChevronDown, Search } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import MyPostTable from "./MyPostTable/MyPostTable";
-import SectionHead from "@/components/shared/SectionHead/SectionHead";
-import Link from "next/link";
-import MyButton from "@/components/ui/MyButton/MyButton";
 
 const MyPostsPage = () => {
   // State management
@@ -90,7 +90,7 @@ const MyPostsPage = () => {
     router.push(`/user/update-post/${postId}`);
   };
 
-  const [deletePost] = useDeletePostMutation();
+  const [deletePost] = useDeletePostForUserMutation();
 
   const handleDelete = async (postId: string) => {
     Swal.fire({
