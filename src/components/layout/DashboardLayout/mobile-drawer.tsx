@@ -119,15 +119,15 @@ function MobileNav({ role }: { role: string }) {
             />
             <NavGroup icon={<MapPinned size={20} />} label="Manage Food Spots">
               <NavItem
-                href="/dashboard/all-posts"
+                href="/dashboard/manage-post"
                 label="All Posts"
-                isActive={pathname === "/dashboard/all-posts"}
+                isActive={pathname === "/dashboard/manage-post"}
                 isNested
               />
               <NavItem
-                href="/dashboard/my-posts"
+                href="/dashboard/my-post"
                 label="My Posts"
-                isActive={pathname === "/dashboard/my-posts"}
+                isActive={pathname === "/dashboard/my-post"}
                 isNested
               />
               <NavItem
@@ -136,15 +136,21 @@ function MobileNav({ role }: { role: string }) {
                 isActive={pathname === "/dashboard/create-post"}
                 isNested
               />
+              <NavItem
+                href="/dashboard/admin-approve"
+                label="Make premium Posts"
+                isActive={pathname === "/dashboard/admin-approve"}
+                isNested
+              />
             </NavGroup>
             <NavGroup
               icon={<ChartBarStacked size={20} />}
               label="Manage Categories"
             >
               <NavItem
-                href="/dashboard/all-categories"
+                href="/dashboard/manage-category"
                 label="All Categories"
-                isActive={pathname === "/dashboard/all-categories"}
+                isActive={pathname === "/dashboard/manage-category"}
                 isNested
               />
               <NavItem
@@ -164,12 +170,12 @@ function MobileNav({ role }: { role: string }) {
                 isActive={pathname === "/dashboard/all-comments"}
                 isNested
               />
-              <NavItem
-                href="/dashboard/all-ratings"
-                label="All Ratings"
-                isActive={pathname === "/dashboard/all-ratings"}
-                isNested
-              />
+              {/* <NavItem
+                     href="/dashboard/all-ratings"
+                     label="All Ratings"
+                     isActive={pathname === "/dashboard/all-ratings"}
+                     isNested
+                   /> */}
             </NavGroup>
             <NavItem
               href="/dashboard/profile"

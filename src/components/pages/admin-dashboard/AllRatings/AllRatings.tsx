@@ -35,7 +35,7 @@ const AdminStatsCard = () => {
     },
     {
       label: "Average Rating",
-      value: data?.data?.averageRating || 0,
+      value: data?.data?.averageRating?.toFixed(2) || 0,
       icon: <BarChart3 className="text-indigo-600 w-6 h-6" />,
       bg: "bg-indigo-100",
     },
