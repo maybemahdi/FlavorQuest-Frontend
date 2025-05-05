@@ -28,6 +28,7 @@ import { useState } from "react";
 import { CommentSection } from "./CommentSection/CommentSection";
 import MyContainer from "@/components/shared/MyContainer/MyContainer";
 import RatingSection from "./RatingSection/RatingSection";
+import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
 
 interface DecodedUser extends JwtPayload {
   id: string;
@@ -108,7 +109,10 @@ const SpotDetailsPage = ({ spotId }: { spotId: string }) => {
       id: spot?.id ?? "",
       data: { type },
     };
-    await createVoteMutation({ id: payload.id, data: payload.data }).unwrap();
+    // await createVoteMutation({ id: payload.id, data: payload.data }).unwrap();
+    await handleAsyncWithToast(async () => {
+      return createVoteMutation({ id: payload.id, data: payload.data });
+    }, "Vote is on processing...")
     refetch();
     setIsActionLoading(false);
   };
