@@ -5,18 +5,25 @@ A feature-rich, responsive web application where users can discover, review, and
 ## 🚀 Live Demo
 
 Frontend: [https://flavor-quest-frontend.vercel.app/](https://flavor-quest-frontend.vercel.app/)  
-Backend API: [https://flavor-quest-backend.vercel.app/api/v1](https://flavor-quest-backend.vercel.app/api/v1)
+Backend API: [https://flavor-quest-backend-tau.vercel.app/api/v1](https://flavor-quest-backend-tau.vercel.app/api/v1)
+
+
+## Admin Login Credentials
+- Email: mh7266391@gmail.com
+- Password: 123456
 
 ---
 
 ## 🧠 Project Features (Frontend)
 
 ### ✅ General
+
 - Fully responsive design (mobile-first)
 - Clean and intuitive UI using Tailwind CSS
 - Navigation with authentication-aware layout
 
 ### 👤 User Functionality
+
 - Register and login using email and password
 - Post new food discoveries with:
   - Title
@@ -31,10 +38,12 @@ Backend API: [https://flavor-quest-backend.vercel.app/api/v1](https://flavor-que
 - View profile and manage posted content
 
 ### 💎 Premium User Features
+
 - Subscribe via payment gateway (SSLCommerz/ShurjoPay)
 - Access exclusive “Premium” food posts
 
 ### 🔐 Admin Functionality
+
 - Admin login and dashboard access
 - Approve or reject user-submitted food posts
 - Mark posts as premium content
@@ -54,7 +63,6 @@ Backend API: [https://flavor-quest-backend.vercel.app/api/v1](https://flavor-que
 
 - Lottie React
 
-
 ## 🛠️ Getting Started (Setup Locally)
 
 ### 1. Clone the Repository
@@ -69,13 +77,11 @@ yarn install
 
 ## Create env file at root folder
 
-- NEXT_PUBLIC_BASE_URL=https://flavor-quest-backend.vercel.app/api/v1
-- NEXT_PUBLIC_GOOGLE_ID="your-google-client-id"
-- NEXT_PUBLIC_GOOGLE_SECRET="your-google-client-secret"
-- NEXT_PUBLIC_NEXT_AUTH_SECRET="your-random-auth-secret"
+- NEXT_PUBLIC_BASE_URL=https://flavor-quest-backend-tau.vercel.app/api/v1
 
 ## Run the server
 
 npm run dev
 # or
 yarn dev
+```
